@@ -1,5 +1,5 @@
 package com.wisetime.wisetime.models.user;
 
-public enum TagEnum {
+public enum TagUserEnum {
 	ADMINISTRADOR, COORDENADOR, FUNCIONARIO;
 }

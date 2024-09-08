@@ -26,11 +26,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tag", nullable = false)
-    private TagEnum tag;
+    private TagUserEnum tag;
 
     public User() {}
 
-    public User(String name, Role role, TagEnum tag, String email, String password) {
+    public User(String name, Role role, TagUserEnum tag, String email, String password) {
         this.name = name;
         this.role = role;
         this.tag = tag;
@@ -78,11 +78,11 @@ public class User {
         this.role = role;
     }
 
-    public TagEnum getTag() {
+    public TagUserEnum getTag() {
         return tag;
     }
 
-    public void setTag(TagEnum tag) {
+    public void setTag(TagUserEnum tag) {
         this.tag = tag;
     }
 }

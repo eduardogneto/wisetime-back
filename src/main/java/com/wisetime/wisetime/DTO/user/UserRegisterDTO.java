@@ -1,6 +1,6 @@
 package com.wisetime.wisetime.DTO.user;
 
-import com.wisetime.wisetime.models.user.TagEnum;  // Importando o enum TagEnum
+import com.wisetime.wisetime.models.user.TagUserEnum;
 
 public class UserRegisterDTO {
 
@@ -9,7 +9,7 @@ public class UserRegisterDTO {
     private String email;
     private String password;
     private Long roleId; // Armazena apenas o ID da Role
-    private TagEnum tag; // Adicionado o campo tag
+    private TagUserEnum tag; // Adicionado o campo tag
 
     // Getters e setters
     public Long getId() {
@@ -52,11 +52,11 @@ public class UserRegisterDTO {
         this.password = password;
     }
 
-    public TagEnum getTag() {
+    public TagUserEnum getTag() {
         return tag;
     }
 
-    public void setTag(TagEnum tag) {
+    public void setTag(TagUserEnum tag) {
         this.tag = tag;
     }
 }

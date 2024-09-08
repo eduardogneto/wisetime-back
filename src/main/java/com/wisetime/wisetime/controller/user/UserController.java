@@ -6,6 +6,7 @@ import com.wisetime.wisetime.DTO.user.UserResponseDTO;
 import com.wisetime.wisetime.models.role.Role;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.role.RoleRepository;
+import com.wisetime.wisetime.service.role.RoleService;
 import com.wisetime.wisetime.service.user.UserService;
 
 import java.util.List;
@@ -25,6 +26,9 @@ public class UserController {
 
     @Autowired
     private RoleRepository roleRepository;
+    
+    @Autowired
+    private RoleService roleService;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerOrUpdate(@RequestBody UserRegisterDTO registerDTO) {
@@ -67,4 +71,12 @@ public class UserController {
         List<User> users = userService.getUsersByOrganization(organizationId);
         return ResponseEntity.ok(users);
     }
+    
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getRolesByOrganization(@RequestParam Long organizationId) {
+        List<Role> roles = roleService.getRolesByOrganization(organizationId);
+        return ResponseEntity.ok(roles);
+    }
+    
+    
 }
