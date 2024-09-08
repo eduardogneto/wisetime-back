@@ -1,5 +1,6 @@
 package com.wisetime.wisetime.models.user;
 
+import com.wisetime.wisetime.models.organization.Organization;
 import com.wisetime.wisetime.models.role.Role;
 import jakarta.persistence.*;
 
@@ -85,4 +86,5 @@ public class User {
     public void setTag(TagUserEnum tag) {
         this.tag = tag;
     }
+
 }

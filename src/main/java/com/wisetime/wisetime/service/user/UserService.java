@@ -53,4 +53,8 @@ public class UserService {
         return userRepository.findByRole_Organization_Id(organizationId);
     }
     
+    public Optional<User> findById(Long userId) {
+        return userRepository.findById(userId);
+    }
+    
 }
