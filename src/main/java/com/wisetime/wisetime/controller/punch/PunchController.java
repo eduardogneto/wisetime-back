@@ -13,16 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.wisetime.wisetime.DTO.punch.ApprovalRequestDTO;
 import com.wisetime.wisetime.DTO.punch.PunchEditDTO;
 import com.wisetime.wisetime.DTO.punch.PunchLogDTO;
 import com.wisetime.wisetime.DTO.punch.PunchSummaryDTO;
 import com.wisetime.wisetime.models.punch.PunchLog;
-import com.wisetime.wisetime.models.punch.PunchRequest;
 import com.wisetime.wisetime.models.punch.PunchTypeEnum;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.service.punch.PunchLogService;
-import com.wisetime.wisetime.service.punch.PunchRequestService;
 import com.wisetime.wisetime.service.user.UserService;
 
 @RestController
@@ -34,9 +31,6 @@ public class PunchController {
 
     @Autowired
     private PunchLogService punchLogService;
-
-    @Autowired
-    private PunchRequestService punchRequestService;
 
     @PostMapping("/log")
     public ResponseEntity<PunchLog> logPunch(@RequestBody PunchLogDTO punchLogDTO) {
@@ -110,17 +104,6 @@ public class PunchController {
         }
 
         return ResponseEntity.ok(punchLogs);
-    }
-
-    // Endpoint para aprovar ou reprovar uma solicitação de edição de ponto
-    @PostMapping("/approve/{requestId}")
-    public ResponseEntity<PunchRequest> approveOrRejectRequest(@PathVariable Long requestId, @RequestBody ApprovalRequestDTO approvalRequestDTO) {
-        PunchRequest request = punchRequestService.findById(requestId);
-        request.setStatus(approvalRequestDTO.getStatus());
-
-        PunchRequest updatedRequest = punchRequestService.save(request);
-
-        return ResponseEntity.ok(updatedRequest);
     }
     
     @GetMapping("/history/summary/{userId}")

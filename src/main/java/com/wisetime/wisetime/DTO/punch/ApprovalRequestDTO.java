@@ -1,17 +1,36 @@
 package com.wisetime.wisetime.DTO.punch;
 
-import com.wisetime.wisetime.models.punch.ApprovalStatusEnum;
+import java.time.LocalDateTime;
+
+import com.wisetime.wisetime.request.RequestStatusEnum;
 
 public class ApprovalRequestDTO {
 
-    private ApprovalStatusEnum status;
+	private RequestStatusEnum status; // Use RequestStatusEnum em vez de ApprovalStatusEnum
+    private String justification;
+    private LocalDateTime newTimestamp;  // Campo de justificativa para o usuário
 
-    // Getters e Setters
-    public ApprovalStatusEnum getStatus() {
+    public RequestStatusEnum getStatus() {
         return status;
     }
 
-    public void setStatus(ApprovalStatusEnum status) {
+    public LocalDateTime getNewTimestamp() {
+		return newTimestamp;
+	}
+
+	public void setNewTimestamp(LocalDateTime newTimestamp) {
+		this.newTimestamp = newTimestamp;
+	}
+
+	public void setStatus(RequestStatusEnum status) {
         this.status = status;
+    }
+
+    public String getJustification() {
+        return justification;
+    }
+
+    public void setJustification(String justification) {
+        this.justification = justification;
     }
 }

@@ -2,8 +2,14 @@ package com.wisetime.wisetime.service.user;
 
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.user.UserRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +19,7 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    
 
     public User saveOrUpdateUser(User user) {
         // Verifica se o usuário com o mesmo email já existe

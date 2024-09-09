@@ -17,6 +17,7 @@ public interface PunchLogRepository extends JpaRepository<PunchLog, Long> {
     
     List<PunchLog> findByUserId(Long userId);
     
+    
     // Para obter a última batida de ponto
     @Query("SELECT p FROM PunchLog p WHERE p.user.id = :userId ORDER BY p.timestamp DESC")
     List<PunchLog> findLastPunchLogByUserId(@Param("userId") Long userId);

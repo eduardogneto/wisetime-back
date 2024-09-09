@@ -57,10 +57,10 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLoginDTO loginDTO) {
         Optional<User> userOpt = userService.login(loginDTO.getEmail(), loginDTO.getPassword());
-
+        
         if (userOpt.isPresent()) {
             User user = userOpt.get();
-            return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getRole().getOrganization().getId()));
+            return ResponseEntity.ok(new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getRole().getOrganization().getId(), user.getTag()));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email ou senha inválidos");
         }

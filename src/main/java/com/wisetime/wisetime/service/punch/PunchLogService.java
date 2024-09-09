@@ -53,5 +53,9 @@ public class PunchLogService {
             punchLogRepository.save(log); // Salvar o ajuste
         }
     }
+    
+    public List<PunchLog> findByUserId(Long userId) {
+        return punchLogRepository.findByUserId(userId);
+    }
 }
 
