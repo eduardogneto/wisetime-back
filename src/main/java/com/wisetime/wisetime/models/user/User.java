@@ -1,14 +1,35 @@
 package com.wisetime.wisetime.models.user;
 
-import com.wisetime.wisetime.models.organization.Organization;
-import com.wisetime.wisetime.models.role.Role;
-import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.wisetime.wisetime.models.team.Team;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
-    @Id
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -22,8 +43,8 @@ public class User {
     private String password;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @JoinColumn(name = "team_id", nullable = false)
+    private Team team;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tag", nullable = false)
@@ -31,12 +52,18 @@ public class User {
 
     public User() {}
 
-    public User(String name, Role role, TagUserEnum tag, String email, String password) {
+    public User(String name, Team team, TagUserEnum tag, String email, String password) {
         this.name = name;
-        this.role = role;
+        this.team = team;
         this.tag = tag;
         this.email = email;
         this.password = password;
+    }
+    
+    public User(String email, String password, TagUserEnum tag) {
+        this.email = email;
+        this.password = password;
+        this.tag = tag;
     }
 
     public Long getId() {
@@ -55,8 +82,8 @@ public class User {
         this.name = name;
     }
 
-    public Role getRole() {
-        return role;
+    public Team getTeam() {
+        return team;
     }
 
     public String getEmail() {
@@ -75,8 +102,8 @@ public class User {
 		this.password = password;
 	}
 
-	public void setRole(Role role) {
-        this.role = role;
+	public void setTeam(Team team) {
+        this.team = team;
     }
 
     public TagUserEnum getTag() {
@@ -86,5 +113,30 @@ public class User {
     public void setTag(TagUserEnum tag) {
         this.tag = tag;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.tag == TagUserEnum.ADMINISTRADOR) {
+            return List.of(
+                new SimpleGrantedAuthority("ROLE_ADMIN"),
+                new SimpleGrantedAuthority("ROLE_USER")
+            );
+        } else if (this.tag == TagUserEnum.COORDENADOR) {
+            return List.of(
+                new SimpleGrantedAuthority("ROLE_COORDENATOR"),
+                new SimpleGrantedAuthority("ROLE_USER")
+            );
+        } else if (this.tag == TagUserEnum.FUNCIONARIO) {
+            return List.of(
+                new SimpleGrantedAuthority("ROLE_USER")
+            );
+        }
+        return List.of();
+    }
+
+	@Override
+	public String getUsername() {
+		return email;
+	}
 
 }

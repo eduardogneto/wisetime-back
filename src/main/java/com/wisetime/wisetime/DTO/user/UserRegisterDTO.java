@@ -8,7 +8,7 @@ public class UserRegisterDTO {
     private String name;
     private String email;
     private String password;
-    private Long roleId; // Armazena apenas o ID da Role
+    private Long teamId; 
     private TagUserEnum tag; // Adicionado o campo tag
 
     // Getters e setters
@@ -20,12 +20,12 @@ public class UserRegisterDTO {
         this.id = id;
     }
 
-    public Long getRoleId() {
-        return roleId;
+    public Long getTeamId() {
+        return teamId;
     }
 
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
+    public void setTeamId(Long teamId) {
+        this.teamId = teamId;
     }
 
     public String getName() {

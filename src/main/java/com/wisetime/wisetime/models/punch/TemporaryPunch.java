@@ -2,8 +2,8 @@ package com.wisetime.wisetime.models.punch;
 
 import java.time.LocalDateTime;
 
+import com.wisetime.wisetime.models.request.Request;
 import com.wisetime.wisetime.models.user.User;
-import com.wisetime.wisetime.request.Request;
 
 import jakarta.persistence.*;
 

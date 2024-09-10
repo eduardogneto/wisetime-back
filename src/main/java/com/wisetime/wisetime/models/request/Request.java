@@ -1,4 +1,4 @@
-package com.wisetime.wisetime.request;
+package com.wisetime.wisetime.models.request;
 
 import java.util.List;
 

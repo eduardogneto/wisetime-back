@@ -2,6 +2,10 @@ package com.wisetime.wisetime.DTO.punch;
 
 public class PunchSummaryDTO {
     private String date;
+    private int entryCount;
+    private int exitCount;
+    private String status;
+    
     public String getDate() {
 		return date;
 	}
@@ -26,9 +30,7 @@ public class PunchSummaryDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	private int entryCount;
-    private int exitCount;
-    private String status;
+	
 
     // Getters and Setters
 }

@@ -1,5 +1,6 @@
 package com.wisetime.wisetime.DTO.user;
 
+import com.wisetime.wisetime.DTO.team.TeamDTO;
 import com.wisetime.wisetime.models.user.TagUserEnum;
 
 public class UserResponseDTO {
@@ -8,42 +9,43 @@ public class UserResponseDTO {
     private String name;
     private String email;
     private Long organizationId;
+    private TeamDTO team; 
     private TagUserEnum tag;
 
-    // Construtor
-    public UserResponseDTO(Long id, String name, String email, Long organizationId, TagUserEnum tag) {
+    public UserResponseDTO(Long id, String name, String email, Long organizationId, TeamDTO team, TagUserEnum tag) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.organizationId = organizationId;
+        this.team = team;
         this.tag = tag;
     }
 
+    // Getters e Setters
+    public TeamDTO getTeam() {
+        return team;
+    }
+
+    public void getTeam(TeamDTO team) {
+        this.team = team;
+    }
+
     public Long getOrganizationId() {
-		return organizationId;
-	}
+        return organizationId;
+    }
 
-	public void setOrganizationId(Long organizationId) {
-		this.organizationId = organizationId;
-	}
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
 
-	public TagUserEnum getTag() {
-		return tag;
-	}
+    public TagUserEnum getTag() {
+        return tag;
+    }
 
-	public void setTag(TagUserEnum tag) {
-		this.tag = tag;
-	}
+    public void setTag(TagUserEnum tag) {
+        this.tag = tag;
+    }
 
-	public Long getOrganization_id() {
-		return organizationId;
-	}
-
-	public void setOrganization_id(Long organizationId) {
-		this.organizationId = organizationId;
-	}
-
-	// Getters e setters
     public Long getId() {
         return id;
     }

@@ -2,7 +2,8 @@ package com.wisetime.wisetime.DTO.punch;
 
 import java.time.LocalDateTime;
 
-import com.wisetime.wisetime.request.RequestStatusEnum;
+import com.wisetime.wisetime.models.request.RequestStatusEnum;
+
 
 public class ApprovalRequestDTO {
 

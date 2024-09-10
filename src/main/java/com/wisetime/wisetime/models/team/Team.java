@@ -1,11 +1,11 @@
-package com.wisetime.wisetime.models.role;
+package com.wisetime.wisetime.models.team;
 
 import com.wisetime.wisetime.models.organization.Organization;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "roles")
-public class Role {
+@Table(name = "team")
+public class Team {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,9 +18,9 @@ public class Role {
     @JoinColumn(name = "organization_id")
     private Organization organization;
 
-    public Role() {}
+    public Team() {}
 
-    public Role(String name, Organization organization) {
+    public Team(String name, Organization organization) {
         this.name = name;
         this.organization = organization;
     }

@@ -10,8 +10,9 @@ public class RequestDTO {
     private String justification;
     private String requestType;
     private String status;
-    private User user; // ID do solicitante
-    private List<PunchDTO> punches; // Lista de punches
+    private User user; 
+    private List<PunchDTO> punches; 
+    
 	public Long getId() {
 		return id;
 	}
