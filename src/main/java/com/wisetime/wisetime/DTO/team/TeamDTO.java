@@ -1,14 +1,16 @@
 package com.wisetime.wisetime.DTO.team;
 
-import com.wisetime.wisetime.models.organization.Organization;
-
 public class TeamDTO {
     private Long id;
     private String name;
     private String description;
     private Long organizationId;
 
+    // Construtor padrão (necessário para o Jackson)
+    public TeamDTO() {
+    }
 
+    // Construtor com todos os campos
     public TeamDTO(Long id, String name, String description, Long organizationId) {
         this.id = id;
         this.name = name;
@@ -16,6 +18,7 @@ public class TeamDTO {
         this.organizationId = organizationId;
     }
     
+    // Construtor com nome e descrição
     public TeamDTO(String name, String description) {
         this.name = name;
         this.description = description;

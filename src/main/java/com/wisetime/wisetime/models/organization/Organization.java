@@ -39,7 +39,8 @@ public class Organization {
 
     public Organization() {}
 
-    public Organization(String name, String taxId, String email, String phone, Address address) {
+    public Organization(Long id, String name, String taxId, String email, String phone, Address address) {
+    	this.id = id;
         this.name = name;
         this.taxId = taxId;
         this.email = email;
