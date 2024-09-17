@@ -24,6 +24,15 @@ public class TeamService {
     }
 
     private TeamDTO mapToDTO(Team team) {
-        return new TeamDTO(team.getId(), team.getName(), team.getOrganization().getId());
+        Long organizationId = null;
+        if (team.getOrganization() != null) {
+            organizationId = team.getOrganization().getId();
+        }
+        return new TeamDTO(
+            team.getId(),
+            team.getName(),
+            team.getDescription(),
+            organizationId
+        );
     }
 }

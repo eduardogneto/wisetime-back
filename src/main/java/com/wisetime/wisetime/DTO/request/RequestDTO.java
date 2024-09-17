@@ -3,6 +3,7 @@ package com.wisetime.wisetime.DTO.request;
 import java.util.List;
 
 import com.wisetime.wisetime.DTO.punch.PunchDTO;
+import com.wisetime.wisetime.DTO.user.UserDTO;
 import com.wisetime.wisetime.models.user.User;
 
 public class RequestDTO {
@@ -10,7 +11,7 @@ public class RequestDTO {
     private String justification;
     private String requestType;
     private String status;
-    private User user; 
+    private UserDTO user; 
     private List<PunchDTO> punches; 
     
 	public Long getId() {
@@ -37,10 +38,10 @@ public class RequestDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public User getUser() {
+	public UserDTO getUser() {
 		return user;
 	}
-	public void setUser(User user) {
+	public void setUser(UserDTO user) {
 		this.user = user;
 	}
 	public List<PunchDTO> getPunches() {

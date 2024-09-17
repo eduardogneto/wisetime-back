@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wisetime.wisetime.DTO.punch.ApprovalRequestDTO;
 import com.wisetime.wisetime.DTO.request.RequestDTO;
+import com.wisetime.wisetime.DTO.request.RequestFilterDTO;
 import com.wisetime.wisetime.DTO.request.RequestResponseDTO;
 import com.wisetime.wisetime.models.request.Request;
 import com.wisetime.wisetime.service.request.RequestService;
@@ -29,7 +30,7 @@ public class RequestController {
     @PostMapping("/create")
     public ResponseEntity<RequestResponseDTO> createRequest(@RequestBody RequestDTO requestDTO) {
         Request savedRequest = this.requestService.create(requestDTO);
-        RequestResponseDTO responseDTO = this.requestService.mapToDTO(savedRequest);  // Converte a entidade para DTO
+        RequestResponseDTO responseDTO = this.requestService.mapToDTO(savedRequest); 
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -50,6 +51,12 @@ public class RequestController {
     public ResponseEntity<Map<String, Long>> countRequestsByStatus(@PathVariable Long organizationId) {
         Map<String, Long> counts = requestService.countRequestsByStatus(organizationId);
         return ResponseEntity.ok(counts);
+    }
+    
+    @PostMapping("/filter")
+    public ResponseEntity<List<RequestDTO>> filterRequests(@RequestBody RequestFilterDTO filterDTO) {
+        List<RequestDTO> filteredRequests = requestService.getFilteredRequests(filterDTO);
+        return ResponseEntity.ok(filteredRequests);
     }
 
 

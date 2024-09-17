@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.wisetime.wisetime.DTO.team.TeamDTO;
 import com.wisetime.wisetime.DTO.user.UserRegisterDTO;
 import com.wisetime.wisetime.DTO.user.UserResponseDTO;
+import com.wisetime.wisetime.models.organization.Organization;
 import com.wisetime.wisetime.models.team.Team;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.team.TeamRepository;
@@ -80,17 +81,32 @@ public class UserService {
 //        return mapToDTO(savedUser); 
 //    }
 
-    private UserResponseDTO mapToDTO(User user) {
-        Team team = user.getTeam(); 
-        TeamDTO teamDTO = new TeamDTO(team.getId(), team.getName(), team.getOrganization().getId());
+    
+    
+    public UserResponseDTO mapToDTO(User user) {
+        Team team = user.getTeam();
+        TeamDTO teamDTO = null;
+
+        if (team != null) {
+            Organization organization = team.getOrganization();
+            Long organizationId = (organization != null) ? organization.getId() : null;
+
+            teamDTO = new TeamDTO(
+                team.getId(),
+                team.getName(),
+                team.getDescription(),
+                organizationId
+            );
+        }
 
         return new UserResponseDTO(
             user.getId(),
             user.getName(),
             user.getEmail(),
-            user.getTeam().getOrganization().getId(),
-            teamDTO,  
+            teamDTO,
             user.getTag()
         );
     }
+
+    
 }

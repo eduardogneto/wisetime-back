@@ -15,7 +15,9 @@ import com.wisetime.wisetime.DTO.punch.ApprovalRequestDTO;
 import com.wisetime.wisetime.DTO.punch.PunchDTO;
 import com.wisetime.wisetime.DTO.punch.TemporaryPunchDTO;
 import com.wisetime.wisetime.DTO.request.RequestDTO;
+import com.wisetime.wisetime.DTO.request.RequestFilterDTO;
 import com.wisetime.wisetime.DTO.request.RequestResponseDTO;
+import com.wisetime.wisetime.DTO.user.UserDTO;
 import com.wisetime.wisetime.models.punch.PunchLog;
 import com.wisetime.wisetime.models.punch.PunchTypeEnum;
 import com.wisetime.wisetime.models.punch.TemporaryPunch;
@@ -125,7 +127,14 @@ public class RequestService {
 	        requestDTO.setJustification(request.getJustification());
 	        requestDTO.setRequestType(request.getRequestType().toString());
 	        requestDTO.setStatus(request.getStatus().toString());
-	        requestDTO.setUser(request.getUser());  
+
+	        User user = request.getUser();
+	        if (user != null) {
+	            UserDTO userDTO = new UserDTO();
+	            userDTO.setId(user.getId());
+	            userDTO.setName(user.getName());
+	            requestDTO.setUser(userDTO);
+	        }
 
 	        if (request.getRequestType() == RequestTypeEnum.ADICAO_DE_PONTO) {
 	            List<PunchDTO> punchDTOs = request.getTemporaryPunches().stream().map(tempPunch -> {
@@ -141,6 +150,7 @@ public class RequestService {
 	        return requestDTO;
 	    }).collect(Collectors.toList());
 	}
+
 	
 	public Request approveRequest(Long requestId, ApprovalRequestDTO approvalRequestDTO) {
 	    Request request = findById(requestId)
@@ -172,6 +182,63 @@ public class RequestService {
 	    counts.put("reprovado", countByOrganizationIdAndStatus(organizationId, RequestStatusEnum.REPROVADO));
 	    return counts;
 	}
+	
+	public List<RequestDTO> getFilteredRequests(RequestFilterDTO filterDTO) {
+	    List<Request> requests;
+
+	    if (filterDTO.getUserId() != null) {
+	        requests = requestRepository.findByUserId(filterDTO.getUserId());
+	    } else {
+	        requests = requestRepository.findAll();
+	    }
+
+	    if (filterDTO.getTypes() != null && !filterDTO.getTypes().isEmpty()) {
+	        requests = requests.stream()
+	                .filter(request -> filterDTO.getTypes().contains(request.getRequestType().name()))
+	                .collect(Collectors.toList());
+	    }
+
+	    if (filterDTO.getStatuses() != null && !filterDTO.getStatuses().isEmpty()) {
+	        requests = requests.stream()
+	                .filter(request -> filterDTO.getStatuses().contains(request.getStatus().name()))
+	                .collect(Collectors.toList());
+	    }
+
+	    return requests.stream()
+	            .map(this::mapToFilterDTO)
+	            .collect(Collectors.toList());
+	}
+
+
+	public RequestDTO mapToFilterDTO(Request request) {
+	    RequestDTO dto = new RequestDTO();
+	    dto.setId(request.getId());
+	    dto.setRequestType(request.getRequestType().name());
+	    dto.setJustification(request.getJustification());
+	    dto.setStatus(request.getStatus().name());
+
+	    // Mapeando o usuário
+	    User user = request.getUser();
+	    if (user != null) {
+	        UserDTO userDTO = new UserDTO(user.getId(), user.getName());
+	        dto.setUser(userDTO);
+	    }
+
+	    // Mapeando os punches, se existirem
+	    if (request.getTemporaryPunches() != null && !request.getTemporaryPunches().isEmpty()) {
+	        List<PunchDTO> punchDTOs = request.getTemporaryPunches().stream().map(tempPunch -> {
+	            PunchDTO punchDTO = new PunchDTO();
+	            punchDTO.setStatus(tempPunch.getType().name());
+	            punchDTO.setHours(tempPunch.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+	            return punchDTO;
+	        }).collect(Collectors.toList());
+
+	        dto.setPunches(punchDTOs);
+	    }
+
+	    return dto;
+	}
+
 
 
 

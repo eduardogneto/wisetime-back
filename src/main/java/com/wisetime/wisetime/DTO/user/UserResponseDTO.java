@@ -8,15 +8,13 @@ public class UserResponseDTO {
     private Long id;
     private String name;
     private String email;
-    private Long organizationId;
     private TeamDTO team; 
     private TagUserEnum tag;
 
-    public UserResponseDTO(Long id, String name, String email, Long organizationId, TeamDTO team, TagUserEnum tag) {
+    public UserResponseDTO(Long id, String name, String email, TeamDTO team, TagUserEnum tag) {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.organizationId = organizationId;
         this.team = team;
         this.tag = tag;
     }
@@ -28,14 +26,6 @@ public class UserResponseDTO {
 
     public void getTeam(TeamDTO team) {
         this.team = team;
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
     }
 
     public TagUserEnum getTag() {
