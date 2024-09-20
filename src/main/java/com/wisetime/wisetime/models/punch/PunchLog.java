@@ -3,6 +3,7 @@ package com.wisetime.wisetime.models.punch;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wisetime.wisetime.DTO.user.UserDTO;
 import com.wisetime.wisetime.models.organization.Organization;
 import com.wisetime.wisetime.models.user.User;
 

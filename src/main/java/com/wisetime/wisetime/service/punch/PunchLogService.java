@@ -68,7 +68,7 @@ public class PunchLogService {
     }
     
     public PunchLog logPunch(PunchLogDTO punchLogDTO) {
-    	User user = userService.findEntityById(punchLogDTO.getUserId())
+        User user = userService.findEntityById(punchLogDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + punchLogDTO.getUserId()));
 
         Optional<PunchLog> lastPunchOpt = getLastPunchLog(user.getId());
