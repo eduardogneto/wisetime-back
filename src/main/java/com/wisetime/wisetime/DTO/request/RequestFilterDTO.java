@@ -3,7 +3,7 @@ package com.wisetime.wisetime.DTO.request;
 import java.util.List;
 
 public class RequestFilterDTO {
-	private Long userId;
+	private Long teamId;
     private List<String> types;  
     private List<String> statuses; 
 
@@ -12,12 +12,12 @@ public class RequestFilterDTO {
         return types;
     }
 
-    public Long getUserId() {
-		return userId;
+    public Long getTeamId() {
+		return teamId;
 	}
 
-	public void setUserId(Long userId) {
-		this.userId = userId;
+	public void setTeamId(Long userId) {
+		this.teamId = userId;
 	}
 
 	public void setTypes(List<String> types) {

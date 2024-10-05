@@ -2,6 +2,7 @@ package com.wisetime.wisetime.service.request;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,8 +58,8 @@ public class RequestService {
         return requestRepository.findByOrganizationId(organizationId);
     }
     
-    public Long countByOrganizationIdAndStatus(Long organizationId, RequestStatusEnum status) {
-        return requestRepository.countByOrganizationIdAndStatus(organizationId, status);
+    public Long countByTeamIdAndStatus(Long teamId, RequestStatusEnum status) {
+        return requestRepository.countByTeamIdAndStatus(teamId, status);
     }
 
 	public Request create(RequestDTO requestDTO) {
@@ -175,39 +176,57 @@ public class RequestService {
 	    return save(request); 
 	}
 	
-	public Map<String, Long> countRequestsByStatus(Long organizationId) {
+	public Map<String, Long> countRequestsByStatus(Long teamId) {
 	    Map<String, Long> counts = new HashMap<>();
-	    counts.put("pendente", countByOrganizationIdAndStatus(organizationId, RequestStatusEnum.PENDENTE));
-	    counts.put("aprovado", countByOrganizationIdAndStatus(organizationId, RequestStatusEnum.APROVADO));
-	    counts.put("reprovado", countByOrganizationIdAndStatus(organizationId, RequestStatusEnum.REPROVADO));
+	    counts.put("pendente", countByTeamIdAndStatus(teamId, RequestStatusEnum.PENDENTE));
+	    counts.put("aprovado", countByTeamIdAndStatus(teamId, RequestStatusEnum.APROVADO));
+	    counts.put("reprovado", countByTeamIdAndStatus(teamId, RequestStatusEnum.REPROVADO));
 	    return counts;
 	}
 	
 	public List<RequestDTO> getFilteredRequests(RequestFilterDTO filterDTO) {
 	    List<Request> requests;
 
-	    if (filterDTO.getUserId() != null) {
-	        requests = requestRepository.findByUserId(filterDTO.getUserId());
+	    // Verifica se o teamId foi fornecido
+	    if (filterDTO.getTeamId() != null) {
+	        // Converte os tipos e status de String para Enum, se fornecidos
+	        List<RequestTypeEnum> types = null;
+	        if (filterDTO.getTypes() != null && !filterDTO.getTypes().isEmpty()) {
+	            types = filterDTO.getTypes().stream()
+	                    .map(RequestTypeEnum::valueOf)
+	                    .collect(Collectors.toList());
+	        }
+
+	        List<RequestStatusEnum> statuses = null;
+	        if (filterDTO.getStatuses() != null && !filterDTO.getStatuses().isEmpty()) {
+	            statuses = filterDTO.getStatuses().stream()
+	                    .map(RequestStatusEnum::valueOf)
+	                    .collect(Collectors.toList());
+	        }
+
+	        // Se tipos e status foram fornecidos, usa o método com filtros adicionais
+	        if (types != null && statuses != null) {
+	            requests = requestRepository.findByUserTeamIdAndTypeInAndStatusIn(filterDTO.getTeamId(), types, statuses);
+	        } else if (types != null) {
+	            // Implementar método no repositório para filtrar por tipos
+	            requests = requestRepository.findByUserTeamIdAndTypeIn(filterDTO.getTeamId(), types);
+	        } else if (statuses != null) {
+	            // Implementar método no repositório para filtrar por status
+	            requests = requestRepository.findByUserTeamIdAndStatusIn(filterDTO.getTeamId(), statuses);
+	        } else {
+	            requests = requestRepository.findByUserTeamId(filterDTO.getTeamId());
+	        }
 	    } else {
-	        requests = requestRepository.findAll();
+	        // Se nenhum teamId foi fornecido, pode buscar todas as solicitações ou retornar vazio
+	        requests = new ArrayList<>(); // Ou lance uma exceção, dependendo da lógica do seu aplicativo
 	    }
 
-	    if (filterDTO.getTypes() != null && !filterDTO.getTypes().isEmpty()) {
-	        requests = requests.stream()
-	                .filter(request -> filterDTO.getTypes().contains(request.getRequestType().name()))
-	                .collect(Collectors.toList());
-	    }
-
-	    if (filterDTO.getStatuses() != null && !filterDTO.getStatuses().isEmpty()) {
-	        requests = requests.stream()
-	                .filter(request -> filterDTO.getStatuses().contains(request.getStatus().name()))
-	                .collect(Collectors.toList());
-	    }
-
+	    // Mapeia as solicitações para DTOs
 	    return requests.stream()
 	            .map(this::mapToFilterDTO)
 	            .collect(Collectors.toList());
 	}
+
 
 
 	public RequestDTO mapToFilterDTO(Request request) {
