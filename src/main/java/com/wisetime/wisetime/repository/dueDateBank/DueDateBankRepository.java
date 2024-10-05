@@ -1,6 +1,6 @@
 package com.wisetime.wisetime.repository.dueDateBank;
 
-
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +12,10 @@ import com.wisetime.wisetime.models.organization.Organization;
 @Repository
 public interface DueDateBankRepository extends JpaRepository<DueDateBank, Long> {
 	List<DueDateBank> findByOrganizationId(Long organizationId);
+
+	List<DueDateBank> findByEndDateAfter(LocalDate date);
+
+	boolean existsByStartDateAndOrganization(LocalDate startDate, Organization organization);
+	
+	
 }

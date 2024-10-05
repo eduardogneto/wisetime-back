@@ -30,7 +30,6 @@ public class DueDateBankController {
         DueDateBank dueDateBank = new DueDateBank(
                 dueDateBankDTO.getStartDate(),
                 dueDateBankDTO.getEndDate(),
-                dueDateBankDTO.getTag(),
                 organization);
 
         DueDateBank savedDueDateBank = dueDateBankService.saveDueDateBank(dueDateBank);

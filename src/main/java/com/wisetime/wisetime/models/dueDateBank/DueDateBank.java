@@ -19,8 +19,7 @@ public class DueDateBank {
     @Column(name = "end_date", nullable = false)
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "tag", nullable = false)
+    @Transient
     private TagDueDateBankEnum tag;
 
     @ManyToOne
@@ -30,11 +29,9 @@ public class DueDateBank {
     public DueDateBank() {
     }
 
-    // Construtor correto com todos os parâmetros, incluindo Organization
-    public DueDateBank(LocalDate startDate, LocalDate endDate, TagDueDateBankEnum tag, Organization organization) {
+    public DueDateBank(LocalDate startDate, LocalDate endDate, Organization organization) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.tag = tag;
         this.organization = organization;
     }
 
@@ -64,7 +61,16 @@ public class DueDateBank {
     }
 
     public TagDueDateBankEnum getTag() {
-        return tag;
+    	LocalDate today = LocalDate.now();
+        if (today.isBefore(this.startDate)) {
+            return TagDueDateBankEnum.PROXIMO;
+        } else if ((today.isEqual(this.startDate) || today.isAfter(this.startDate)) && today.isBefore(this.endDate)) {
+            return TagDueDateBankEnum.ANDAMENTO;
+        } else if (today.isEqual(this.endDate) || today.isAfter(this.endDate)) {
+            return TagDueDateBankEnum.COMPLETO;
+        } else {
+            return null; 
+        }
     }
 
     public void setTag(TagDueDateBankEnum tag) {

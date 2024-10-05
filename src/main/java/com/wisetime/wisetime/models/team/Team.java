@@ -1,5 +1,6 @@
 package com.wisetime.wisetime.models.team;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wisetime.wisetime.models.organization.Organization;
 
 import jakarta.persistence.Column;
@@ -26,6 +27,7 @@ public class Team {
 
     @ManyToOne
     @JoinColumn(name = "organization_id")
+    @JsonIgnore
     private Organization organization;
 
     public Team() {}
