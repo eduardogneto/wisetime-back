@@ -2,10 +2,9 @@ package com.wisetime.wisetime.DTO.punch;
 
 
 public class PunchDTO {
-    private String status;  // Entrada ou Saída
-    private String hours;   // Horário no formato HH:mm
+    private String status; 
+    private String hours;  
 
-    // Getters e Setters
     public String getStatus() {
         return status;
     }

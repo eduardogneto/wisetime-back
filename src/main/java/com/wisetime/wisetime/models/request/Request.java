@@ -103,6 +103,5 @@ public class Request {
 		this.temporaryPunches = temporaryPunches;
 	}
 
-    // Getters e setters...
 }
 

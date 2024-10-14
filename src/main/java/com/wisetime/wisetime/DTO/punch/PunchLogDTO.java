@@ -11,7 +11,6 @@ public class PunchLogDTO {
     private PunchTypeEnum type;
     private String location;
 
-    // Getters e Setters
     public Long getUserId() {
         return userId;
     }

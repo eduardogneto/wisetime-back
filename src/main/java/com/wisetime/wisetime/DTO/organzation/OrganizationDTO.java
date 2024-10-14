@@ -1,4 +1,4 @@
-package com.wisetime.wisetime.DTO.organzation; // Corrigido o nome do pacote
+package com.wisetime.wisetime.DTO.organzation;
 
 import java.util.List;
 import com.wisetime.wisetime.DTO.team.TeamDTO;
@@ -13,7 +13,6 @@ public class OrganizationDTO {
     private AddressDTO address;
     private List<TeamDTO> teams;
 
-    // Construtor
     public OrganizationDTO(Long id, String name, String taxId, String email, String phone, AddressDTO address, List<TeamDTO> teams) {
     	this.id = id;
         this.name = name;
@@ -36,7 +35,6 @@ public class OrganizationDTO {
 		this.id = id;
 	}
 
-	// Getters e setters
     public String getName() {
         return name;
     }

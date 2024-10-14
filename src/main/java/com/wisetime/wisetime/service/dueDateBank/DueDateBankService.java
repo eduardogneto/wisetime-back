@@ -30,11 +30,10 @@ public class DueDateBankService {
     public List<DueDateBank> findByOrganizationId(Long organizationId) {
         List<DueDateBank> dueDateBanks = dueDateBankRepository.findByOrganizationId(organizationId);
         
-        // Força o carregamento da organização para cada DueDateBank
         dueDateBanks.forEach(dueDateBank -> {
             Organization org = dueDateBank.getOrganization();
             if (org != null) {
-                org.getName(); // Acessa um campo da organização para garantir o carregamento
+                org.getName();
             }
         });
         
@@ -99,7 +98,6 @@ public class DueDateBankService {
 
 
                     if (!nextPeriodExists) {
-                        // Cria o próximo período
                         DueDateBank nextDueDateBank = new DueDateBank(
                                 dueDateBank.getEndDate().plusDays(1),
                                 dueDateBank.getEndDate().plusMonths(1),

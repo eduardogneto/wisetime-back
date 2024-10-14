@@ -36,7 +36,6 @@ public class PunchLogService {
     public PunchLog save(PunchLog punchLog) {
         PunchLog savedPunchLog = punchLogRepository.save(punchLog);
 
-        // Se a batida for de saída, recalcular o saldo do usuário
         if (punchLog.getType() == PunchTypeEnum.EXIT) {
             balanceService.calculateAndSaveUserBalance(punchLog.getUser());
         }
@@ -99,7 +98,6 @@ public class PunchLogService {
             punchLog.setType(PunchTypeEnum.ENTRY);
         }
 
-        // Salvar a batida de ponto e possivelmente recalcular o saldo
         return save(punchLog);
     }
 

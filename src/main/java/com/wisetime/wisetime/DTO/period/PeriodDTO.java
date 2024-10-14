@@ -13,7 +13,6 @@ public class PeriodDTO {
         this.endDate = endDate;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

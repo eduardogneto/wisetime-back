@@ -7,9 +7,9 @@ import com.wisetime.wisetime.models.request.RequestStatusEnum;
 
 public class ApprovalRequestDTO {
 
-	private RequestStatusEnum status; // Use RequestStatusEnum em vez de ApprovalStatusEnum
+	private RequestStatusEnum status; 
     private String justification;
-    private LocalDateTime newTimestamp;  // Campo de justificativa para o usuário
+    private LocalDateTime newTimestamp;  
 
     public RequestStatusEnum getStatus() {
         return status;

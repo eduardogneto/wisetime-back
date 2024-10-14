@@ -1,5 +1,3 @@
-// Pacote: com.wisetime.wisetime.models.balance
-
 package com.wisetime.wisetime.models.balance;
 
 import com.wisetime.wisetime.models.user.User;
@@ -15,7 +13,7 @@ public class UserBalance {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate date; // Data do cálculo
+    private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -24,8 +22,6 @@ public class UserBalance {
     private Long currentPeriodBalanceInSeconds;
     private Long previousPeriodBalanceInSeconds;
     private Long totalBalanceInSeconds;
-
-    // Getters e Setters
 
     public Long getId() {
         return id;

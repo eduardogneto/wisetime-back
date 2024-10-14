@@ -1,5 +1,3 @@
-// Pacote: com.wisetime.wisetime.service.balance
-
 package com.wisetime.wisetime.service.balance;
 
 import com.wisetime.wisetime.models.user.User;
@@ -19,7 +17,7 @@ public class BalanceScheduler {
     @Autowired
     private UserService userService;
 
-    @Scheduled(cron = "0 0 1 * * ?") // Executa diariamente às 1h da manhã
+    @Scheduled(cron = "0 0 1 * * ?") 
     public void calculateDailyBalances() {
         List<User> users = userService.findAllUsers();
 
@@ -27,7 +25,6 @@ public class BalanceScheduler {
             try {
                 balanceService.calculateAndSaveUserBalance(user);
             } catch (Exception e) {
-                // Log e tratamento de erros
             }
         }
     }

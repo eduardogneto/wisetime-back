@@ -4,14 +4,13 @@ import com.wisetime.wisetime.models.user.TagUserEnum;
 
 public class UserRegisterDTO {
 
-    private Long id; // Campo para armazenar o ID do usuário em caso de atualização
+    private Long id; 
     private String name;
     private String email;
     private String password;
     private Long teamId; 
-    private TagUserEnum tag; // Adicionado o campo tag
+    private TagUserEnum tag; 
 
-    // Getters e setters
     public Long getId() {
         return id;
     }

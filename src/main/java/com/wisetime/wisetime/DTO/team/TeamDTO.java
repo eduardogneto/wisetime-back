@@ -6,11 +6,9 @@ public class TeamDTO {
     private String description;
     private Long organizationId;
 
-    // Construtor padrão (necessário para o Jackson)
     public TeamDTO() {
     }
 
-    // Construtor com todos os campos
     public TeamDTO(Long id, String name, String description, Long organizationId) {
         this.id = id;
         this.name = name;
@@ -18,13 +16,11 @@ public class TeamDTO {
         this.organizationId = organizationId;
     }
     
-    // Construtor com nome e descrição
     public TeamDTO(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

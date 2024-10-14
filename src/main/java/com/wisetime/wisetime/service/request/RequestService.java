@@ -187,9 +187,7 @@ public class RequestService {
 	public List<RequestDTO> getFilteredRequests(RequestFilterDTO filterDTO) {
 	    List<Request> requests;
 
-	    // Verifica se o teamId foi fornecido
 	    if (filterDTO.getTeamId() != null) {
-	        // Converte os tipos e status de String para Enum, se fornecidos
 	        List<RequestTypeEnum> types = null;
 	        if (filterDTO.getTypes() != null && !filterDTO.getTypes().isEmpty()) {
 	            types = filterDTO.getTypes().stream()
@@ -204,24 +202,19 @@ public class RequestService {
 	                    .collect(Collectors.toList());
 	        }
 
-	        // Se tipos e status foram fornecidos, usa o método com filtros adicionais
 	        if (types != null && statuses != null) {
 	            requests = requestRepository.findByUserTeamIdAndTypeInAndStatusIn(filterDTO.getTeamId(), types, statuses);
 	        } else if (types != null) {
-	            // Implementar método no repositório para filtrar por tipos
 	            requests = requestRepository.findByUserTeamIdAndTypeIn(filterDTO.getTeamId(), types);
 	        } else if (statuses != null) {
-	            // Implementar método no repositório para filtrar por status
 	            requests = requestRepository.findByUserTeamIdAndStatusIn(filterDTO.getTeamId(), statuses);
 	        } else {
 	            requests = requestRepository.findByUserTeamId(filterDTO.getTeamId());
 	        }
 	    } else {
-	        // Se nenhum teamId foi fornecido, pode buscar todas as solicitações ou retornar vazio
-	        requests = new ArrayList<>(); // Ou lance uma exceção, dependendo da lógica do seu aplicativo
+	        requests = new ArrayList<>(); 
 	    }
 
-	    // Mapeia as solicitações para DTOs
 	    return requests.stream()
 	            .map(this::mapToFilterDTO)
 	            .collect(Collectors.toList());
@@ -236,14 +229,12 @@ public class RequestService {
 	    dto.setJustification(request.getJustification());
 	    dto.setStatus(request.getStatus().name());
 
-	    // Mapeando o usuário
 	    User user = request.getUser();
 	    if (user != null) {
 	        UserDTO userDTO = new UserDTO(user.getId(), user.getName());
 	        dto.setUser(userDTO);
 	    }
 
-	    // Mapeando os punches, se existirem
 	    if (request.getTemporaryPunches() != null && !request.getTemporaryPunches().isEmpty()) {
 	        List<PunchDTO> punchDTOs = request.getTemporaryPunches().stream().map(tempPunch -> {
 	            PunchDTO punchDTO = new PunchDTO();

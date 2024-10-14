@@ -1,5 +1,3 @@
-// Pacote: com.wisetime.wisetime.repository.balance
-
 package com.wisetime.wisetime.repository.balance;
 
 import com.wisetime.wisetime.models.balance.UserBalance;

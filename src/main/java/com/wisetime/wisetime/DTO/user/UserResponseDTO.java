@@ -19,7 +19,6 @@ public class UserResponseDTO {
         this.tag = tag;
     }
 
-    // Getters e Setters
     public TeamDTO getTeam() {
         return team;
     }

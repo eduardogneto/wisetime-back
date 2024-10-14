@@ -17,7 +17,7 @@ public class TemporaryPunch {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // Relacionamento com a entidade User
+    private User user; 
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -28,13 +28,12 @@ public class TemporaryPunch {
 
     @ManyToOne
     @JoinColumn(name = "request_id", nullable = false)
-    private Request request; // Relacionamento com a entidade Request
+    private Request request; 
     
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PunchTypeEnum type;  // Tipo de batida (Entrada ou Saída)
+    private PunchTypeEnum type;  
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

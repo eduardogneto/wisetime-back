@@ -1,4 +1,3 @@
-// src/main/java/com/wisetime/wisetime/DTO/punch/PunchLogResponseDTO.java
 package com.wisetime.wisetime.DTO.punch;
 
 import java.time.LocalDateTime;
@@ -11,9 +10,8 @@ public class PunchLogResponseDTO {
     private LocalDateTime timestamp;
     private PunchTypeEnum type;
     private String location;
-    private Long organizationId; // Apenas o ID da organização
+    private Long organizationId; 
 
-    // Construtores
     public PunchLogResponseDTO() {}
 
     public PunchLogResponseDTO(Long id, UserDTO user, LocalDateTime timestamp, PunchTypeEnum type, String location, Long organizationId) {

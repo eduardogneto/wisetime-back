@@ -44,25 +44,19 @@ public class BalanceService {
         Long userId = user.getId();
         Long organizationId = user.getTeam().getOrganization().getId();
 
-        // Obter o período atual
         DueDateBank currentPeriod = dueDateBankService.getCurrentDueDateBank(LocalDate.now(), organizationId);
        
 
-        // Obter o período anterior
         DueDateBank previousPeriod = dueDateBankService.getPreviousDueDateBank(currentPeriod.getStartDate(),
                 organizationId);
         
 
-        // Calcular o saldo do período atual
         Duration currentPeriodBalance = calculateUserBalanceForPeriod(userId, organizationId, currentPeriod, true);
 
-        // Calcular o saldo do período anterior
         Duration previousPeriodBalance = calculateUserBalanceForPeriod(userId, organizationId, previousPeriod, false);
 
-        // Calcular o saldo total
         Duration totalBalance = calculateUserTotalBalance(userId, organizationId);
 
-        // Salvar o saldo no banco de dados
         UserBalance userBalance = userBalanceRepository.findByUserId(userId);
         if (userBalance == null) {
             userBalance = new UserBalance();
@@ -88,7 +82,6 @@ public class BalanceService {
             return balanceDTO;
         }
 
-        // Formatar os valores
         BalanceDTO balanceDTO = new BalanceDTO();
         balanceDTO.setCurrentPeriodBalance(formatDuration(userBalance.getCurrentPeriodBalanceInSeconds()));
         balanceDTO.setPreviousPeriodBalance(formatDuration(userBalance.getPreviousPeriodBalanceInSeconds()));
@@ -98,7 +91,6 @@ public class BalanceService {
     }
 
 
-    // Métodos auxiliares
 
     public Duration calculateUserBalanceForPeriod(Long userId, Long organizationId, DueDateBank period, boolean isCurrentPeriod) {
     	if (period == null) {
@@ -107,25 +99,19 @@ public class BalanceService {
         LocalDate startDate = period.getStartDate();
         LocalDate endDate = period.getEndDate();
 
-        // Se for o período atual, ajusta a endDate para a data atual
         if (isCurrentPeriod) {
             endDate = LocalDate.now();
         }
 
-        // Gerar lista de todos os dias úteis no período ajustado
         List<LocalDate> allDates = getAllBusinessDays(startDate, endDate);
 
-        // Obter os registros de ponto do usuário no período ajustado
         List<PunchLog> punchLogs = punchLogRepository.findByUserIdAndTimestampBetween(
                 userId, startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
 
-        // Calcular as horas trabalhadas diariamente
         Map<LocalDate, Duration> dailyWorkHours = calculateDailyWorkHours(punchLogs, allDates);
 
-        // Calcular o saldo diário
         Map<LocalDate, Duration> dailyBalances = calculateDailyBalance(dailyWorkHours);
 
-        // Calcular o saldo total do período
         Duration totalBalance = calculateTotalBalance(dailyBalances);
 
         return totalBalance;
@@ -133,29 +119,22 @@ public class BalanceService {
 
 
     public Duration calculateUserTotalBalance(Long userId, Long organizationId) {
-        // Obter o primeiro período associado ao usuário
         DueDateBank firstDueDateBank = dueDateBankService.getEarliestDueDateBank(organizationId);
         if (firstDueDateBank == null) {
-            // Não existe nenhum período registrado para a organização do usuário
             return Duration.ZERO;
         }
 
         LocalDate startDate = firstDueDateBank.getStartDate();
         LocalDate endDate = LocalDate.now();
 
-        // Gerar lista de todos os dias úteis no período ajustado
         List<LocalDate> allDates = getAllBusinessDays(startDate, endDate);
 
-        // Obter todos os registros de ponto do usuário na organização até o momento atual
         List<PunchLog> punchLogs = punchLogRepository.findByUserIdAndTimestampBefore(userId, LocalDateTime.now());
 
-        // Calcular as horas trabalhadas diariamente
         Map<LocalDate, Duration> dailyWorkHours = calculateDailyWorkHours(punchLogs, allDates);
 
-        // Calcular o saldo diário
         Map<LocalDate, Duration> dailyBalances = calculateDailyBalance(dailyWorkHours);
 
-        // Calcular o saldo total acumulado
         Duration totalBalance = calculateTotalBalance(dailyBalances);
 
         return totalBalance;
@@ -171,14 +150,11 @@ public class BalanceService {
         for (LocalDate date : allDates) {
             List<PunchLog> logs = logsByDate.getOrDefault(date, new ArrayList<>());
 
-            // Se não houver registros, consideramos duração zero
             if (logs.isEmpty()) {
                 dailyWorkHours.put(date, Duration.ZERO);
                 continue;
             }
 
-            // Caso contrário, calculamos normalmente
-            // Ordenar os logs por timestamp
             logs.sort(Comparator.comparing(PunchLog::getTimestamp));
 
             List<LocalDateTime> entries = new ArrayList<>();
@@ -192,9 +168,7 @@ public class BalanceService {
                 }
             }
 
-            // Verificar se o número de entradas e saídas é par
             if (entries.size() != exits.size()) {
-                // Ignorar o último registro de entrada sem saída correspondente
                 if (entries.size() > exits.size()) {
                     entries = entries.subList(0, exits.size());
                 } else {
@@ -202,7 +176,6 @@ public class BalanceService {
                 }
             }
 
-            // Parear entradas e saídas
             Duration totalWorkDuration = Duration.ZERO;
             int pairs = Math.min(entries.size(), exits.size());
             for (int i = 0; i < pairs; i++) {
@@ -253,41 +226,35 @@ public class BalanceService {
     }
     
     public List<LocalDate> getAllBusinessDays(LocalDate startDate, LocalDate endDate) {
-        // Lista de feriados fixos - Exemplos
         Set<LocalDate> holidays = getStaticHolidays(startDate.getYear(), endDate.getYear());
 
-        // Filtrando os dias úteis
         return startDate.datesUntil(endDate.plusDays(1))
                 .filter(date -> isBusinessDay(date, holidays))
                 .collect(Collectors.toList());
     }
 
-    // Método para verificar se o dia é útil
     private boolean isBusinessDay(LocalDate date, Set<LocalDate> holidays) {
-        // Verifica se o dia é fim de semana
         if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
             return false;
         }
-        // Verifica se é um feriado
         if (holidays.contains(date)) {
             return false;
         }
         return true;
     }
 
-    // Método para obter os feriados fixos
     private Set<LocalDate> getStaticHolidays(int startYear, int endYear) {
         Set<LocalDate> holidays = new HashSet<>();
         
         for (int year = startYear; year <= endYear; year++) {
-            holidays.add(LocalDate.of(year, Month.JANUARY, 1));   // Confraternização Universal - 1º de Janeiro
-            holidays.add(LocalDate.of(year, Month.APRIL, 21));    // Tiradentes - 21 de Abril
-            holidays.add(LocalDate.of(year, Month.MAY, 1));       // Dia do Trabalho - 1º de Maio
-            holidays.add(LocalDate.of(year, Month.SEPTEMBER, 7)); // Independência do Brasil - 7 de Setembro
-            holidays.add(LocalDate.of(year, Month.OCTOBER, 12));  // Nossa Senhora Aparecida - 12 de Outubro
-            holidays.add(LocalDate.of(year, Month.NOVEMBER, 2));  // Finados - 2 de Novembro
-            holidays.add(LocalDate.of(year, Month.NOVEMBER, 15)); // Proclamação da República - 15 de Novembro
-            holidays.add(LocalDate.of(year, Month.DECEMBER, 25)); // Natal - 25 de Dezembro
+            holidays.add(LocalDate.of(year, Month.JANUARY, 1));   
+            holidays.add(LocalDate.of(year, Month.APRIL, 21));    
+            holidays.add(LocalDate.of(year, Month.MAY, 1));      
+            holidays.add(LocalDate.of(year, Month.SEPTEMBER, 7)); 
+            holidays.add(LocalDate.of(year, Month.OCTOBER, 12));  
+            holidays.add(LocalDate.of(year, Month.NOVEMBER, 2));  
+            holidays.add(LocalDate.of(year, Month.NOVEMBER, 15)); 
+            holidays.add(LocalDate.of(year, Month.DECEMBER, 25));
         }
 
         return holidays;

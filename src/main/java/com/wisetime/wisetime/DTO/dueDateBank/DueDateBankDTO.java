@@ -11,7 +11,6 @@ public class DueDateBankDTO {
     private TagDueDateBankEnum tag;
     private Long organizationId;
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

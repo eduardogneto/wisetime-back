@@ -152,7 +152,6 @@ public class OrganizationService {
     
     @Transactional
     public void updateTeams(Organization organization, List<TeamDTO> teamsDTO) {
-        // Mapeia os times existentes por ID para fácil acesso
         Map<Long, Team> existingTeamsMap = organization.getTeams().stream()
             .collect(Collectors.toMap(Team::getId, team -> team));
 
@@ -160,13 +159,11 @@ public class OrganizationService {
 
         for (TeamDTO dto : teamsDTO) {
             if (dto.getId() != null && existingTeamsMap.containsKey(dto.getId())) {
-                // Atualiza um time existente
                 Team team = existingTeamsMap.get(dto.getId());
                 team.setName(dto.getName());
                 team.setDescription(dto.getDescription());
                 updatedTeams.add(team);
             } else {
-                // Cria um novo time
                 Team newTeam = new Team();
                 newTeam.setName(dto.getName());
                 newTeam.setDescription(dto.getDescription());
@@ -175,7 +172,6 @@ public class OrganizationService {
             }
         }
 
-        // Identifica os times que foram removidos
         Set<Long> updatedTeamIds = teamsDTO.stream()
             .filter(dto -> dto.getId() != null)
             .map(TeamDTO::getId)
@@ -185,13 +181,11 @@ public class OrganizationService {
             .filter(team -> !updatedTeamIds.contains(team.getId()))
             .collect(Collectors.toList());
 
-        // Remove os times não presentes na lista atualizada
         for (Team team : teamsToRemove) {
             organization.getTeams().remove(team);
             teamRepository.delete(team);
         }
 
-        // Atualiza a lista de times da organização
         organization.setTeams(updatedTeams);
         organizationRepository.save(organization);
     }

@@ -1,5 +1,3 @@
-// Pacote: com.wisetime.wisetime.DTO.balance
-
 package com.wisetime.wisetime.DTO.balance;
 
 public class BalanceDTO {
@@ -7,7 +5,6 @@ public class BalanceDTO {
     private String previousPeriodBalance;
     private String totalBalance;
 
-    // Getters e Setters
     public String getCurrentPeriodBalance() {
         return currentPeriodBalance;
     }

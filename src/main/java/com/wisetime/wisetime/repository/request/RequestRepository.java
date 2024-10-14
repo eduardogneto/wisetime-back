@@ -24,7 +24,6 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Query("SELECT r FROM Request r WHERE r.user.team.id = :teamId")
     List<Request> findByUserTeamId(@Param("teamId") Long teamId);
 
-    // Se precisar filtrar também por status e tipo:
     @Query("SELECT r FROM Request r WHERE r.user.team.id = :teamId AND r.requestType IN :types AND r.status IN :statuses")
     List<Request> findByUserTeamIdAndTypeInAndStatusIn(@Param("teamId") Long teamId, @Param("types") List<RequestTypeEnum> types, @Param("statuses") List<RequestStatusEnum> statuses);
     

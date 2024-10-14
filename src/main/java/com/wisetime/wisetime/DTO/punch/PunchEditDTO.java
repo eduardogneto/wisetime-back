@@ -8,10 +8,8 @@ public class PunchEditDTO {
     private Long userId;
     private Long punchLogId;
     private LocalDateTime newTimestamp;
-    private PunchTypeEnum type; // Add this field for ENTRY/EXIT
+    private PunchTypeEnum type; 
     private String location;
-
-    // Getters and setters
 
     public String getLocation() {
 		return location;

@@ -35,7 +35,7 @@ public class PunchLog {
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private PunchTypeEnum type; // ENTRY or EXIT
+    private PunchTypeEnum type;
 
     @Column(name = "location", nullable = true)
     private String location;
@@ -91,6 +91,4 @@ public class PunchLog {
 	public void setOrganization(Organization organization) {
 		this.organization = organization;
 	}
-
-    // Getters e Setters
 }

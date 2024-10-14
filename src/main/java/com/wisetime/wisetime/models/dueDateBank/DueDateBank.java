@@ -35,7 +35,6 @@ public class DueDateBank {
         this.organization = organization;
     }
 
-    // Getters e Setters
     public Long getId() {
         return id;
     }

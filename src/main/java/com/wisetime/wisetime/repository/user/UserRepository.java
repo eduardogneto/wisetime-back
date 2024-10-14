@@ -11,7 +11,6 @@ import com.wisetime.wisetime.models.user.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-//    Optional<User> findByEmail(String email);
     
 	UserDetails findByEmail(String email);
 	

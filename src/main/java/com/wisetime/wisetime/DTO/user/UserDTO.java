@@ -3,7 +3,6 @@ package com.wisetime.wisetime.DTO.user;
 public class UserDTO {
     private Long id;
     private String name;
-    // Adicione outros campos que você precisa
 
     public UserDTO() {}
 
