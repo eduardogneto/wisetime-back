@@ -29,10 +29,10 @@ public class SecurityConfiguration {
 	    return httpSecurity
 	            .cors(cors -> cors.configurationSource(request -> {
 	                CorsConfiguration config = new CorsConfiguration();
-	                config.setAllowedOrigins(List.of("http://localhost:3000")); // Origens permitidas
-	                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Métodos permitidos
-	                config.setAllowedHeaders(List.of("*")); // Todos os cabeçalhos permitidos
-	                config.setAllowCredentials(true); // Permite envio de credenciais
+	                config.setAllowedOrigins(List.of("http://localhost:3000")); 
+	                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); 
+	                config.setAllowedHeaders(List.of("*")); 
+	                config.setAllowCredentials(true); 
 	                return config;
 	            }))
 	            .csrf(csrf -> csrf.disable())
@@ -40,6 +40,8 @@ public class SecurityConfiguration {
 	            .authorizeHttpRequests(authorize -> authorize
 	                    .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
 	                    .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+	                    .requestMatchers(HttpMethod.POST, "/api/dueDateBank/forceCreate").hasRole("ADMIN")
+	                    .requestMatchers(HttpMethod.POST, "/api/users/{userId}/calculate-balances").hasRole("ADMIN")
 	                    .anyRequest().authenticated()
 	            )
 	            .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

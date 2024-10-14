@@ -7,8 +7,8 @@ public class RegisterDTO {
     private String email; 
     private String password;
     private TagUserEnum tag;
-    private String name;  // Adiciona o campo 'name' obrigatório
-    private Long teamId;  // Adiciona o campo 'teamId' para associar ao time
+    private String name;  
+    private Long teamId; 
 
     public String getEmail() {
         return email;

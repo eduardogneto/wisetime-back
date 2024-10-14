@@ -17,5 +17,12 @@ public interface DueDateBankRepository extends JpaRepository<DueDateBank, Long> 
 
 	boolean existsByStartDateAndOrganization(LocalDate startDate, Organization organization);
 	
+	DueDateBank findByOrganizationIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+            Long organizationId, LocalDate date1, LocalDate date2);
+
+    DueDateBank findTopByOrganizationIdAndEndDateLessThanOrderByEndDateDesc(
+            Long organizationId, LocalDate date);
+	
+    DueDateBank findTopByOrganizationIdOrderByStartDateAsc(Long organizationId);
 	
 }

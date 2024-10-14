@@ -33,6 +33,7 @@ public class OrganizationService {
     public Optional<Organization> findById(Long id) {
         return organizationRepository.findById(id);
     }
+    
 
     public List<OrganizationDTO> getAllOrganizations() {
         List<Organization> organizations = organizationRepository.findAll();

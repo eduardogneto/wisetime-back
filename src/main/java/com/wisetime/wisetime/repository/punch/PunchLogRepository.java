@@ -17,7 +17,6 @@ public interface PunchLogRepository extends JpaRepository<PunchLog, Long> {
     
     List<PunchLog> findByUserId(Long userId);
     
-    
     // Para obter a última batida de ponto
     @Query("SELECT p FROM PunchLog p WHERE p.user.id = :userId ORDER BY p.timestamp DESC")
     List<PunchLog> findLastPunchLogByUserId(@Param("userId") Long userId);
@@ -25,5 +24,12 @@ public interface PunchLogRepository extends JpaRepository<PunchLog, Long> {
     // Para encontrar as batidas subsequentes a partir de uma data
     @Query("SELECT p FROM PunchLog p WHERE p.user.id = :userId AND p.timestamp > :timestamp ORDER BY p.timestamp ASC")
     List<PunchLog> findSubsequentPunchLogs(@Param("userId") Long userId, @Param("timestamp") LocalDateTime timestamp);
+    
+    List<PunchLog> findByUserIdAndOrganizationId(Long userId, Long organizationId);
+    
+    List<PunchLog> findByUserIdAndTimestampBefore(Long userId, LocalDateTime timestamp);
+
+    // Método para obter o primeiro PunchLog de um usuário (mais antigo)
+    PunchLog findFirstByUserIdOrderByTimestampAsc(Long userId);
 }
 

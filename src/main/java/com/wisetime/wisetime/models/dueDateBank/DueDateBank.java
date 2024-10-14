@@ -30,8 +30,8 @@ public class DueDateBank {
     }
 
     public DueDateBank(LocalDate startDate, LocalDate endDate, Organization organization) {
+    	this.endDate = endDate;
         this.startDate = startDate;
-        this.endDate = endDate;
         this.organization = organization;
     }
 

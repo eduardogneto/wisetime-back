@@ -1,4 +1,3 @@
-// Pacote: com.wisetime.wisetime.controller.organization
 package com.wisetime.wisetime.controller.organization;
 
 import java.util.List;
@@ -6,12 +5,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.wisetime.wisetime.DTO.organzation.OrganizationDTO;
 import com.wisetime.wisetime.DTO.team.TeamDTO;
 import com.wisetime.wisetime.models.organization.Organization;
-import com.wisetime.wisetime.models.team.Team;
 import com.wisetime.wisetime.service.organization.OrganizationService;
 import com.wisetime.wisetime.service.team.TeamService;
 
@@ -66,7 +70,7 @@ public class OrganizationController {
     public ResponseEntity<List<TeamDTO>> getTeamsByOrganization(@PathVariable Long id) {
         List<TeamDTO> teams = teamService.getTeamsByOrganization(id);
         if (teams.isEmpty()) {
-            return ResponseEntity.status(404).body(null); // Caso não encontre times
+            return ResponseEntity.status(404).body(null);
         }
         return ResponseEntity.ok(teams);
     }

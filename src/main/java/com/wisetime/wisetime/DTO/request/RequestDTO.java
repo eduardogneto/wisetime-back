@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.wisetime.wisetime.DTO.punch.PunchDTO;
 import com.wisetime.wisetime.DTO.user.UserDTO;
-import com.wisetime.wisetime.models.user.User;
 
 public class RequestDTO {
 	private Long id;

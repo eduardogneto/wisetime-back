@@ -24,14 +24,11 @@ public class UserService {
         return userRepository.findById(userId); 
     }
 
-
     public List<UserResponseDTO> getUsersByOrganization(Long organizationId) {
         List<User> users = userRepository.findByTeam_Organization_Id(organizationId);
         return users.stream().map(this::mapToDTO).collect(Collectors.toList()); 
     }
 
-    
-    
     public UserResponseDTO mapToDTO(User user) {
         Team team = user.getTeam();
         TeamDTO teamDTO = null;
@@ -55,6 +52,10 @@ public class UserService {
             teamDTO,
             user.getTag()
         );
+    }
+    
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
     

@@ -1,16 +1,14 @@
 package com.wisetime.wisetime.service.team;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.wisetime.wisetime.DTO.team.TeamDTO;
-import com.wisetime.wisetime.models.organization.Organization;
 import com.wisetime.wisetime.models.team.Team;
 import com.wisetime.wisetime.repository.team.TeamRepository;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TeamService {

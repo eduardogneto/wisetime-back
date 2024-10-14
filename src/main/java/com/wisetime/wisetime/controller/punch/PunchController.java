@@ -41,9 +41,6 @@ public class PunchController {
             @PathVariable LocalDate date) {
         
         List<PunchLog> punchLogs = punchLogService.getPunchHistoryForDay(userId, date);
-//        if (punchLogs.isEmpty()) {
-//            return ResponseEntity.noContent().build();
-//        }
         
         List<PunchLogResponseDTO> response = punchLogs.stream().map(this::convertToDTO).collect(Collectors.toList());
         return ResponseEntity.ok(response);

@@ -18,6 +18,7 @@ import com.wisetime.wisetime.models.punch.PunchLog;
 import com.wisetime.wisetime.models.punch.PunchTypeEnum;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.punch.PunchLogRepository;
+import com.wisetime.wisetime.service.balance.BalanceService;
 import com.wisetime.wisetime.service.user.UserService;
 
 @Service
@@ -25,12 +26,22 @@ public class PunchLogService {
 
     @Autowired
     private PunchLogRepository punchLogRepository;
-    
+
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BalanceService balanceService;
+
     public PunchLog save(PunchLog punchLog) {
-        return punchLogRepository.save(punchLog);
+        PunchLog savedPunchLog = punchLogRepository.save(punchLog);
+
+        // Se a batida for de saída, recalcular o saldo do usuário
+        if (punchLog.getType() == PunchTypeEnum.EXIT) {
+            balanceService.calculateAndSaveUserBalance(punchLog.getUser());
+        }
+
+        return savedPunchLog;
     }
 
     public PunchLog findById(Long punchLogId) {
@@ -62,11 +73,11 @@ public class PunchLogService {
             punchLogRepository.save(log); 
         }
     }
-    
+
     public List<PunchLog> findByUserId(Long userId) {
         return punchLogRepository.findByUserId(userId);
     }
-    
+
     public PunchLog logPunch(PunchLogDTO punchLogDTO) {
         User user = userService.findEntityById(punchLogDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + punchLogDTO.getUserId()));
@@ -85,18 +96,19 @@ public class PunchLogService {
 
             punchLog.setType(lastPunchType == PunchTypeEnum.ENTRY ? PunchTypeEnum.EXIT : PunchTypeEnum.ENTRY);
         } else {
-            punchLog.setType(PunchTypeEnum.ENTRY);  
+            punchLog.setType(PunchTypeEnum.ENTRY);
         }
 
+        // Salvar a batida de ponto e possivelmente recalcular o saldo
         return save(punchLog);
     }
-    
+
     public List<PunchLog> getPunchHistoryForDay(Long userId, LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
         return getPunchLogsByUserAndDateRange(userId, startOfDay, endOfDay);
     }
-    
+
     public List<PunchSummaryDTO> getPunchHistorySummary(Long userId) {
         List<PunchLog> punchLogs = getPunchLogsByUser(userId);
 
@@ -121,8 +133,12 @@ public class PunchLogService {
         return punchSummaryMap.values().stream().collect(Collectors.toList());
     }
 
+    public List<PunchLog> getPunchLogsByUserAndPeriod(Long userId, LocalDate startDate, LocalDate endDate) {
+        return punchLogRepository.findByUserIdAndTimestampBetween(userId,
+                startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
+    }
 
-
-
+    public List<PunchLog> getPunchLogsByUserAndOrganization(Long userId, Long organizationId) {
+        return punchLogRepository.findByUserIdAndOrganizationId(userId, organizationId);
+    }
 }
-
