@@ -2,10 +2,12 @@ package com.wisetime.wisetime.models.request;
 
 import java.util.List;
 
+import com.wisetime.wisetime.models.certificate.Certificate;
 import com.wisetime.wisetime.models.organization.Organization;
 import com.wisetime.wisetime.models.punch.TemporaryPunch;
 import com.wisetime.wisetime.models.user.User;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -16,10 +18,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "requests")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,62 +57,9 @@ public class Request {
 
     @OneToMany(mappedBy = "request")
     private List<TemporaryPunch> temporaryPunches;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Organization getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
-
-	public RequestTypeEnum getRequestType() {
-		return requestType;
-	}
-
-	public void setRequestType(RequestTypeEnum requestType) {
-		this.requestType = requestType;
-	}
-
-	public String getJustification() {
-		return justification;
-	}
-
-	public void setJustification(String justification) {
-		this.justification = justification;
-	}
-
-	public RequestStatusEnum getStatus() {
-		return status;
-	}
-
-	public void setStatus(RequestStatusEnum status) {
-		this.status = status;
-	}
-
-	public List<TemporaryPunch> getTemporaryPunches() {
-		return temporaryPunches;
-	}
-
-	public void setTemporaryPunches(List<TemporaryPunch> temporaryPunches) {
-		this.temporaryPunches = temporaryPunches;
-	}
+    
+    @OneToOne(mappedBy = "request", cascade = CascadeType.ALL)
+    private Certificate certificate;
 
 }
 

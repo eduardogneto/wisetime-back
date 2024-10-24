@@ -26,14 +26,14 @@ public class RequestController {
 
     @Autowired
     private RequestService requestService;
+    
 
     @PostMapping("/create")
     public ResponseEntity<RequestResponseDTO> createRequest(@RequestBody RequestDTO requestDTO) {
         Request savedRequest = this.requestService.create(requestDTO);
-        RequestResponseDTO responseDTO = this.requestService.mapToDTO(savedRequest); 
+        RequestResponseDTO responseDTO = this.requestService.mapToDTO(savedRequest);
         return ResponseEntity.ok(responseDTO);
     }
-
 
     @GetMapping("/list/{userId}")
     public ResponseEntity<List<RequestDTO>> getRequests(@PathVariable Long userId) {
@@ -58,6 +58,8 @@ public class RequestController {
         List<RequestDTO> filteredRequests = requestService.getFilteredRequests(filterDTO);
         return ResponseEntity.ok(filteredRequests);
     }
+    
+    
 
 
 }
