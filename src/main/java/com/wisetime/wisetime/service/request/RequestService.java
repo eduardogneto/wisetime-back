@@ -314,6 +314,16 @@ public class RequestService {
         }
 
         if (request.getRequestType() == RequestTypeEnum.ADICAO_DE_PONTO) {
+        	if (request.getTemporaryPunches() != null && !request.getTemporaryPunches().isEmpty()) {
+    	        List<PunchDTO> punchDTOs = request.getTemporaryPunches().stream().map(tempPunch -> {
+    	            PunchDTO punchDTO = new PunchDTO();
+    	            punchDTO.setStatus(tempPunch.getType().name());
+    	            punchDTO.setHours(tempPunch.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
+    	            return punchDTO;
+    	        }).collect(Collectors.toList());
+
+    	        dto.setPunches(punchDTOs);
+    	    }
         } else if (request.getRequestType() == RequestTypeEnum.ATESTADO) {
             Certificate certificate = request.getCertificate();
             if (certificate != null) {
