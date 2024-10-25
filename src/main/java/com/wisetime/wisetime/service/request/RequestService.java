@@ -32,6 +32,7 @@ import com.wisetime.wisetime.models.request.RequestStatusEnum;
 import com.wisetime.wisetime.models.request.RequestTypeEnum;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.request.RequestRepository;
+import com.wisetime.wisetime.service.audit.AuditService;
 import com.wisetime.wisetime.service.certificate.CertificateService;
 import com.wisetime.wisetime.service.punch.PunchLogService;
 import com.wisetime.wisetime.service.punch.TemporaryPunchService;
@@ -54,6 +55,9 @@ public class RequestService {
     
     @Autowired
     private CertificateService certificateService;
+    
+    @Autowired
+    private AuditService auditService;
 
     public Request save(Request request) {
         return requestRepository.save(request);
@@ -96,6 +100,7 @@ public class RequestService {
 
             Request savedRequest = this.save(request);
             temporaryPunchService.saveAll(request.getTemporaryPunches());
+            auditService.logAction("Adição de ponto", user, "O Usuário abriu uma solicitação de Adição de ponto");
 
             return savedRequest;
 
@@ -123,6 +128,7 @@ public class RequestService {
             request.setCertificate(certificate);
 
             Request savedRequest = this.save(request);
+            auditService.logAction("Adição de Atestado", user, "O Usuário abriu uma solicitação de Atestado");
             return savedRequest;
 
         } else {
@@ -168,6 +174,9 @@ public class RequestService {
     }
 
     public Request approveRequest(Long requestId, ApprovalRequestDTO approvalRequestDTO) {
+    	User user = userService.findEntityById(approvalRequestDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+    	
         Request request = findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Solicitação não encontrada"));
 
@@ -183,17 +192,20 @@ public class RequestService {
                     punchLog.setOrganization(request.getOrganization());
 
                     punchLogService.save(punchLog);
+                    auditService.logAction("Aprovou Solicitação", user, "O Coordenador aprovou uma solicitação de Adição de ponto do usuário: " + request.getUser().getName());
                 }
             } else if (request.getRequestType() == RequestTypeEnum.ATESTADO) {
                 Certificate certificate = request.getCertificate();
                 certificate.setStatus(CertificateStatusEnum.APROVADO);
                 certificateService.save(certificate);
+                auditService.logAction("Aprovou Solicitação", user, "O Coordenador aprovou uma solicitação de Atestado do usuário: " + request.getUser().getName());
             }
         } else if (approvalRequestDTO.getStatus() == RequestStatusEnum.REPROVADO) {
             if (request.getRequestType() == RequestTypeEnum.ATESTADO) {
                 Certificate certificate = request.getCertificate();
                 certificate.setStatus(CertificateStatusEnum.REPROVADO);
                 certificateService.save(certificate);
+                auditService.logAction("Reprovou Solicitação", user, "O Coordenador reprovou uma solicitação de Atestado do usuário: " + request.getUser().getPassword());
             }
         }
 
