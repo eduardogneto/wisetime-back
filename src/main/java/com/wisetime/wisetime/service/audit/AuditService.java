@@ -2,11 +2,12 @@ package com.wisetime.wisetime.service.audit;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.wisetime.wisetime.DTO.audit.AuditLogDTO;
 import com.wisetime.wisetime.models.audit.AuditLog;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.audit.AuditLogRepository;
@@ -21,19 +22,18 @@ public class AuditService {
 		this.auditLogRepository = auditLogRepository;
 	}
 
-	public List<AuditLog> getAuditLogs(String action, String user, String startDate, String endDate) {
-	    Specification<AuditLog> spec = Specification.where(null);
-
-	    if (action != null && !action.isEmpty()) {
-	        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("acao"), action));
-	    }
-
-	    if (user != null && !user.isEmpty()) {
-	        spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("usuario").get("name"),
-	                "%" + user + "%"));
-	    }
-
-	    return auditLogRepository.findAll(spec);
+	public List<AuditLogDTO> getAuditLogs(Long teamId) {
+	    List<AuditLog> audits = auditLogRepository.findByUserTeamId(teamId);
+	    
+	    return audits.stream().map(audit -> {
+	        AuditLogDTO requestDTO = new AuditLogDTO();
+	        requestDTO.setId(audit.getId());
+	        requestDTO.setAction(audit.getAction());
+	        requestDTO.setName(audit.getUser().getName());
+	        requestDTO.setDetails(audit.getDetails());
+	        requestDTO.setDate(audit.getDate());
+	        return requestDTO; 
+	    }).collect(Collectors.toList()); 
 	}
 	
 	public void logAction(String action, User user, String details) {

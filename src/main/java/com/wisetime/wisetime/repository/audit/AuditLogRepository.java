@@ -1,5 +1,6 @@
 package com.wisetime.wisetime.repository.audit;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,4 +11,5 @@ import com.wisetime.wisetime.models.audit.AuditLog;
 
 @Repository
 public interface AuditLogRepository extends JpaRepository<AuditLog, UUID>, JpaSpecificationExecutor<AuditLog> {
+	List<AuditLog> findByUserTeamId(Long teamId);
 }
