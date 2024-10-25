@@ -205,7 +205,7 @@ public class RequestService {
                 Certificate certificate = request.getCertificate();
                 certificate.setStatus(CertificateStatusEnum.REPROVADO);
                 certificateService.save(certificate);
-                auditService.logAction("Reprovou Solicitação", user, "O Coordenador reprovou uma solicitação de Atestado do usuário: " + request.getUser().getPassword());
+                auditService.logAction("Reprovou Solicitação", user, "O Coordenador reprovou uma solicitação de Atestado do usuário: " + request.getUser().getName());
             }
         }
 
