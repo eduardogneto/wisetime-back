@@ -19,11 +19,14 @@ import org.springframework.stereotype.Service;
 
 import com.wisetime.wisetime.DTO.balance.BalanceDTO;
 import com.wisetime.wisetime.models.balance.UserBalance;
+import com.wisetime.wisetime.models.certificate.Certificate;
+import com.wisetime.wisetime.models.certificate.CertificateStatusEnum;
 import com.wisetime.wisetime.models.dueDateBank.DueDateBank;
 import com.wisetime.wisetime.models.punch.PunchLog;
 import com.wisetime.wisetime.models.punch.PunchTypeEnum;
 import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.balance.UserBalanceRepository;
+import com.wisetime.wisetime.repository.certificate.CertificateRepository;
 import com.wisetime.wisetime.repository.punch.PunchLogRepository;
 import com.wisetime.wisetime.service.dueDateBank.DueDateBankService;
 
@@ -38,6 +41,9 @@ public class BalanceService {
 
     @Autowired
     private UserBalanceRepository userBalanceRepository;
+    
+    @Autowired
+    private CertificateRepository certificateRepository;
 
 
     public void calculateAndSaveUserBalance(User user) {
@@ -103,7 +109,8 @@ public class BalanceService {
             endDate = LocalDate.now();
         }
 
-        List<LocalDate> allDates = getAllBusinessDays(startDate, endDate);
+        List<LocalDate> allDates = getAllBusinessDays(userId, startDate, endDate);
+
 
         List<PunchLog> punchLogs = punchLogRepository.findByUserIdAndTimestampBetween(
                 userId, startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay());
@@ -127,7 +134,7 @@ public class BalanceService {
         LocalDate startDate = firstDueDateBank.getStartDate();
         LocalDate endDate = LocalDate.now();
 
-        List<LocalDate> allDates = getAllBusinessDays(startDate, endDate);
+        List<LocalDate> allDates = getAllBusinessDays(userId, startDate, endDate);
 
         List<PunchLog> punchLogs = punchLogRepository.findByUserIdAndTimestampBefore(userId, LocalDateTime.now());
 
@@ -225,11 +232,12 @@ public class BalanceService {
         return String.format("%s%02d:%02d", sign, hours, minutes);
     }
     
-    public List<LocalDate> getAllBusinessDays(LocalDate startDate, LocalDate endDate) {
+    public List<LocalDate> getAllBusinessDays(Long userId, LocalDate startDate, LocalDate endDate) {
         Set<LocalDate> holidays = getStaticHolidays(startDate.getYear(), endDate.getYear());
+        Set<LocalDate> certificateDays = getApprovedCertificateDates(userId);
 
         return startDate.datesUntil(endDate.plusDays(1))
-                .filter(date -> isBusinessDay(date, holidays))
+                .filter(date -> isBusinessDay(date, holidays) && !certificateDays.contains(date))
                 .collect(Collectors.toList());
     }
 
@@ -258,6 +266,19 @@ public class BalanceService {
         }
 
         return holidays;
+    }
+    
+    private Set<LocalDate> getApprovedCertificateDates(Long userId) {
+        List<Certificate> approvedCertificates = certificateRepository.findByUserIdAndStatus(
+            userId, CertificateStatusEnum.APROVADO);
+
+        Set<LocalDate> certificateDays = new HashSet<>();
+        for (Certificate certificate : approvedCertificates) {
+            LocalDate startDate = certificate.getStartDate();
+            LocalDate endDate = certificate.getEndDate();
+            certificateDays.addAll(startDate.datesUntil(endDate.plusDays(1)).collect(Collectors.toSet()));
+        }
+        return certificateDays;
     }
     
 }

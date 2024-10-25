@@ -58,9 +58,5 @@ public class RequestController {
         List<RequestDTO> filteredRequests = requestService.getFilteredRequests(filterDTO);
         return ResponseEntity.ok(filteredRequests);
     }
-    
-    
-
-
 }
 
