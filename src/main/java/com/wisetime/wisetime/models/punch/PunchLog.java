@@ -1,9 +1,12 @@
 package com.wisetime.wisetime.models.punch;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wisetime.wisetime.models.organization.Address;
 import com.wisetime.wisetime.models.organization.Organization;
+import com.wisetime.wisetime.models.team.Team;
 import com.wisetime.wisetime.models.user.User;
 
 import jakarta.persistence.Column;
@@ -16,9 +19,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "punch_logs")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PunchLog {
 
     @Id
@@ -43,52 +54,4 @@ public class PunchLog {
     @ManyToOne
     @JoinColumn(name = "organization_id", nullable = false)
     private Organization organization;
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public LocalDateTime getTimestamp() {
-		return timestamp;
-	}
-
-	public void setTimestamp(LocalDateTime timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public PunchTypeEnum getType() {
-		return type;
-	}
-
-	public void setType(PunchTypeEnum type) {
-		this.type = type;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Organization getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
-	}
 }
