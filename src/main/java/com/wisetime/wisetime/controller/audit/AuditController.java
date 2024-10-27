@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wisetime.wisetime.DTO.audit.AuditLogDTO;
-import com.wisetime.wisetime.models.audit.AuditLog;
 import com.wisetime.wisetime.service.audit.AuditService;
 
 @RestController

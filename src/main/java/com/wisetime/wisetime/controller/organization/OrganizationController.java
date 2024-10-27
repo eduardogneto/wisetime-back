@@ -47,7 +47,7 @@ public class OrganizationController {
     @PostMapping("/organizations")
     public ResponseEntity<?> createOrganization(@RequestBody OrganizationDTO organizationDTO) {
         Organization organization = organizationService.convertToEntity(organizationDTO);
-        organizationService.saveOrganization(organization);
+        organizationService.saveOrganization(organization, organizationDTO);
         OrganizationDTO savedOrganizationDTO = organizationService.convertToDTO(organization);
         return ResponseEntity.ok(savedOrganizationDTO);
     }
@@ -60,7 +60,7 @@ public class OrganizationController {
         }
 
         Organization updatedOrganization = organizationService.updateOrganization(optionalOrganization.get(), organizationDTO);
-        organizationService.saveOrganization(updatedOrganization);
+        organizationService.saveOrganization(updatedOrganization, organizationDTO);
 
         OrganizationDTO updatedOrganizationDTO = organizationService.convertToDTO(updatedOrganization);
         return ResponseEntity.ok(updatedOrganizationDTO);
