@@ -19,17 +19,22 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "users")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User implements UserDetails {
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -49,70 +54,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "tag", nullable = false)
     private TagUserEnum tag;
-
-    public User() {}
-
-    public User(String name, Team team, TagUserEnum tag, String email, String password) {
-        this.name = name;
-        this.team = team;
-        this.tag = tag;
-        this.email = email;
-        this.password = password;
-    }
-    
-    public User(String email, String password, TagUserEnum tag) {
-        this.email = email;
-        this.password = password;
-        this.tag = tag;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public TagUserEnum getTag() {
-        return tag;
-    }
-
-    public void setTag(TagUserEnum tag) {
-        this.tag = tag;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

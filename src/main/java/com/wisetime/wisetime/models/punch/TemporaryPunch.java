@@ -5,10 +5,27 @@ import java.time.LocalDateTime;
 import com.wisetime.wisetime.models.request.Request;
 import com.wisetime.wisetime.models.user.User;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "temporary_punches")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class TemporaryPunch {
     
     @Id
@@ -33,53 +50,4 @@ public class TemporaryPunch {
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
     private PunchTypeEnum type;  
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public PunchTypeEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(PunchTypeEnum status) {
-        this.status = status;
-    }
-
-    public PunchTypeEnum getType() {
-		return type;
-	}
-
-	public void setType(PunchTypeEnum type) {
-		this.type = type;
-	}
-
-	public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Request getRequest() {
-        return request;
-    }
-
-    public void setRequest(Request request) {
-        this.request = request;
-    }
 }
-
