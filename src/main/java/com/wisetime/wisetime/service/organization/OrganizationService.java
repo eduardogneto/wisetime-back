@@ -16,8 +16,11 @@ import com.wisetime.wisetime.DTO.team.TeamDTO;
 import com.wisetime.wisetime.models.organization.Address;
 import com.wisetime.wisetime.models.organization.Organization;
 import com.wisetime.wisetime.models.team.Team;
+import com.wisetime.wisetime.models.user.User;
 import com.wisetime.wisetime.repository.organization.OrganizationRepository;
 import com.wisetime.wisetime.repository.team.TeamRepository;
+import com.wisetime.wisetime.service.audit.AuditService;
+import com.wisetime.wisetime.service.user.UserService;
 
 import jakarta.transaction.Transactional;
 
@@ -29,6 +32,12 @@ public class OrganizationService {
 
     @Autowired
     private TeamRepository teamRepository;
+    
+    @Autowired
+    private AuditService auditService;
+    
+    @Autowired
+    private UserService userService;
 
     public Optional<Organization> findById(Long id) {
         return organizationRepository.findById(id);
@@ -121,11 +130,18 @@ public class OrganizationService {
         );
     }
 
-    public void saveOrganization(Organization organization) {
+    public void saveOrganization(Organization organization, OrganizationDTO organizationDTO) {
+    	User user = userService.findEntityById(organizationDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + organizationDTO.getUserId()));
         organizationRepository.save(organization);
+        auditService.logAction("Criou Organização", user, "O Administrador criou uma organização chamada: " + organizationDTO.getName());
+        
     }
 
     public Organization updateOrganization(Organization existingOrganization, OrganizationDTO organizationDTO) {
+    	User user = userService.findEntityById(organizationDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + organizationDTO.getUserId()));
+    	
         existingOrganization.setName(organizationDTO.getName());
         existingOrganization.setTaxId(organizationDTO.getTaxId());
         existingOrganization.setEmail(organizationDTO.getEmail());
@@ -146,7 +162,7 @@ public class OrganizationService {
             }
         }
         existingOrganization.setTeams(updatedTeams);
-
+        auditService.logAction("Atualizou Organização", user, "O Administrador atualizou uma organização chamada: " + organizationDTO.getName());
         return existingOrganization;
     }
     
