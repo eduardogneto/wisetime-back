@@ -1,12 +1,9 @@
 package com.wisetime.wisetime.models.punch;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.wisetime.wisetime.models.organization.Address;
 import com.wisetime.wisetime.models.organization.Organization;
-import com.wisetime.wisetime.models.team.Team;
 import com.wisetime.wisetime.models.user.User;
 
 import jakarta.persistence.Column;
