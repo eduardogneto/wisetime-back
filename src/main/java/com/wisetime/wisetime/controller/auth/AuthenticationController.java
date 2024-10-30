@@ -30,7 +30,7 @@ import com.wisetime.wisetime.service.user.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/api/auth")
 public class AuthenticationController {
 
     @Autowired
