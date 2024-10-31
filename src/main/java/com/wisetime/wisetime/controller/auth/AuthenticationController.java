@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,18 +51,25 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword());
-        
-        var auth = authenticationManager.authenticate(usernamePassword);
-        var user = (User) auth.getPrincipal();
+        try {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword());
 
-        var token = tokenService.generateToken(user);
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var user = (User) auth.getPrincipal();
 
-        UserResponseDTO userResponseDTO = userService.mapToDTO(user);
+            var token = tokenService.generateToken(user);
 
-        return ResponseEntity.ok(new LoginResponseDTO(token, userResponseDTO));
+            UserResponseDTO userResponseDTO = userService.mapToDTO(user);
+
+            return ResponseEntity.ok(new LoginResponseDTO(token, userResponseDTO));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new RuntimeException("E-mail ou senha incorretos."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new RuntimeException("Erro interno de autenticação."));
+        }
     }
-    
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterDTO data) {
     	if(this.userRepository.findByEmail(data.getEmail()) != null) return ResponseEntity.badRequest().build();
