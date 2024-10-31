@@ -63,11 +63,7 @@ public class AuthenticationController {
 
             return ResponseEntity.ok(new LoginResponseDTO(token, userResponseDTO));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new RuntimeException("E-mail ou senha incorretos."));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new RuntimeException("Erro interno de autenticação."));
+        	return ResponseEntity.badRequest().build();
         }
     }
     @PostMapping("/register")
