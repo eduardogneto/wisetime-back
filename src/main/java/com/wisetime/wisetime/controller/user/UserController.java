@@ -56,5 +56,12 @@ public class UserController {
         List<TeamDTO> teamDTOs = teamService.getTeamsByOrganization(organizationId);
         return ResponseEntity.ok(teamDTOs);
     }
+    
+    @GetMapping("/employees/{organizationId}")
+    public ResponseEntity<Long> getEmployees(@PathVariable Long organizationId) {
+    	Long count = userService.getEmployees(organizationId);
+    	return ResponseEntity.ok(count);
+    }
+    
 }
 

@@ -58,5 +58,17 @@ public class UserService {
         return userRepository.findAll();
     }
 
+	public Long getEmployees(Long organizationId) {
+		if(organizationId == null) {
+			return 0L;
+		}
+		
+		Long count = userRepository.countByOrganizationId(organizationId);
+		if (count == null) {
+			return 0L;
+		}
+		return count;
+	}
+
     
 }
