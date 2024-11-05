@@ -2,8 +2,6 @@ package com.wisetime.wisetime.service.token;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -17,7 +15,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
 import com.wisetime.wisetime.infra.security.TokenService;
 import com.wisetime.wisetime.models.user.User;
 
