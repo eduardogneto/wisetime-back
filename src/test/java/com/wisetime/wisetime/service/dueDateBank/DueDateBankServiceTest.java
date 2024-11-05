@@ -1,17 +1,11 @@
 package com.wisetime.wisetime.service.dueDateBank;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,21 +36,19 @@ public class DueDateBankServiceTest {
 
     @BeforeEach
     public void setUp() {
-        organization = Organization.builder()
-                .id(1L)
-                .name("Desenvolvimento")
-                .build();
+        organization = new Organization();
+        organization.setId(1L);
+        organization.setName("Organization Name");
 
-        dueDateBank = DueDateBank.builder()
-                .id(1L)
-                .startDate(LocalDate.now().minusMonths(1))
-                .endDate(LocalDate.now().plusMonths(1))
-                .organization(organization)
-                .build();
+        dueDateBank = new DueDateBank();
+        dueDateBank.setId(1L);
+        dueDateBank.setStartDate(LocalDate.now().minusMonths(1));
+        dueDateBank.setEndDate(LocalDate.now().plusMonths(1));
+        dueDateBank.setOrganization(organization);
     }
 
     @Test
-    public void testFindByOrganizationId_Success() {
+    public void testFindByOrganizationId_DueDateBanksExist() {
         when(dueDateBankRepository.findByOrganizationId(organization.getId()))
                 .thenReturn(Collections.singletonList(dueDateBank));
 
@@ -69,7 +61,19 @@ public class DueDateBankServiceTest {
     }
 
     @Test
-    public void testFindAllCurrentDueDateBanks_Success() {
+    public void testFindByOrganizationId_NoDueDateBanksExist() {
+        when(dueDateBankRepository.findByOrganizationId(organization.getId()))
+                .thenReturn(Collections.emptyList());
+
+        List<DueDateBank> result = dueDateBankService.findByOrganizationId(organization.getId());
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(dueDateBankRepository).findByOrganizationId(organization.getId());
+    }
+
+    @Test
+    public void testFindAllCurrentDueDateBanks_CurrentDueDateBanksExist() {
         when(dueDateBankRepository.findByEndDateAfter(any(LocalDate.class)))
                 .thenReturn(Collections.singletonList(dueDateBank));
 
@@ -82,18 +86,41 @@ public class DueDateBankServiceTest {
     }
 
     @Test
-    public void testExistsByStartDateAndOrganization_Exists() {
+    public void testFindAllCurrentDueDateBanks_NoCurrentDueDateBanksExist() {
+        when(dueDateBankRepository.findByEndDateAfter(any(LocalDate.class)))
+                .thenReturn(Collections.emptyList());
+
+        List<DueDateBank> result = dueDateBankService.findAllCurrentDueDateBanks();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(dueDateBankRepository).findByEndDateAfter(any(LocalDate.class));
+    }
+
+    @Test
+    public void testExistsByStartDateAndOrganization_DueDateBankExists() {
         when(dueDateBankRepository.existsByStartDateAndOrganization(any(LocalDate.class), eq(organization)))
                 .thenReturn(true);
 
-        boolean result = dueDateBankService.existsByStartDateAndOrganization(LocalDate.now(), organization);
+        boolean exists = dueDateBankService.existsByStartDateAndOrganization(LocalDate.now(), organization);
 
-        assertTrue(result);
+        assertTrue(exists);
         verify(dueDateBankRepository).existsByStartDateAndOrganization(any(LocalDate.class), eq(organization));
     }
 
     @Test
-    public void testSaveDueDateBank_Success() {
+    public void testExistsByStartDateAndOrganization_DueDateBankDoesNotExist() {
+        when(dueDateBankRepository.existsByStartDateAndOrganization(any(LocalDate.class), eq(organization)))
+                .thenReturn(false);
+
+        boolean exists = dueDateBankService.existsByStartDateAndOrganization(LocalDate.now(), organization);
+
+        assertFalse(exists);
+        verify(dueDateBankRepository).existsByStartDateAndOrganization(any(LocalDate.class), eq(organization));
+    }
+
+    @Test
+    public void testSaveDueDateBank() {
         when(dueDateBankRepository.save(any(DueDateBank.class))).thenReturn(dueDateBank);
 
         DueDateBank result = dueDateBankService.saveDueDateBank(dueDateBank);
@@ -104,7 +131,7 @@ public class DueDateBankServiceTest {
     }
 
     @Test
-    public void testGetCurrentDueDateBank_Success() {
+    public void testGetCurrentDueDateBank_CurrentDueDateBankExists() {
         LocalDate date = LocalDate.now();
         when(dueDateBankRepository.findByOrganizationIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
                 eq(organization.getId()), eq(date), eq(date)))
@@ -119,7 +146,21 @@ public class DueDateBankServiceTest {
     }
 
     @Test
-    public void testGetPreviousDueDateBank_Success() {
+    public void testGetCurrentDueDateBank_CurrentDueDateBankDoesNotExist() {
+        LocalDate date = LocalDate.now();
+        when(dueDateBankRepository.findByOrganizationIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                eq(organization.getId()), eq(date), eq(date)))
+                .thenReturn(null);
+
+        DueDateBank result = dueDateBankService.getCurrentDueDateBank(date, organization.getId());
+
+        assertNull(result);
+        verify(dueDateBankRepository).findByOrganizationIdAndStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                eq(organization.getId()), eq(date), eq(date));
+    }
+
+    @Test
+    public void testGetPreviousDueDateBank_PreviousDueDateBankExists() {
         LocalDate date = LocalDate.now();
         when(dueDateBankRepository.findTopByOrganizationIdAndEndDateLessThanOrderByEndDateDesc(
                 eq(organization.getId()), eq(date)))
@@ -134,7 +175,21 @@ public class DueDateBankServiceTest {
     }
 
     @Test
-    public void testGetEarliestDueDateBank_Success() {
+    public void testGetPreviousDueDateBank_PreviousDueDateBankDoesNotExist() {
+        LocalDate date = LocalDate.now();
+        when(dueDateBankRepository.findTopByOrganizationIdAndEndDateLessThanOrderByEndDateDesc(
+                eq(organization.getId()), eq(date)))
+                .thenReturn(null);
+
+        DueDateBank result = dueDateBankService.getPreviousDueDateBank(date, organization.getId());
+
+        assertNull(result);
+        verify(dueDateBankRepository).findTopByOrganizationIdAndEndDateLessThanOrderByEndDateDesc(
+                eq(organization.getId()), eq(date));
+    }
+
+    @Test
+    public void testGetEarliestDueDateBank_EarliestDueDateBankExists() {
         when(dueDateBankRepository.findTopByOrganizationIdOrderByStartDateAsc(eq(organization.getId())))
                 .thenReturn(dueDateBank);
 
@@ -146,39 +201,76 @@ public class DueDateBankServiceTest {
     }
 
     @Test
-    public void testCreateNextDueDateBanks_NoCurrentBanks() {
+    public void testGetEarliestDueDateBank_EarliestDueDateBankDoesNotExist() {
+        when(dueDateBankRepository.findTopByOrganizationIdOrderByStartDateAsc(eq(organization.getId())))
+                .thenReturn(null);
+
+        DueDateBank result = dueDateBankService.getEarliestDueDateBank(organization.getId());
+
+        assertNull(result);
+        verify(dueDateBankRepository).findTopByOrganizationIdOrderByStartDateAsc(organization.getId());
+    }
+
+    @Test
+    public void testCreateNextDueDateBanks_NoCurrentDueDateBanks() {
         when(dueDateBankRepository.findByEndDateAfter(any(LocalDate.class)))
                 .thenReturn(Collections.emptyList());
-        when(organizationRepository.findAll()).thenReturn(Collections.singletonList(organization));
+
+        when(organizationRepository.findAll())
+                .thenReturn(Collections.singletonList(organization));
 
         dueDateBankService.createNextDueDateBanks();
 
+        verify(dueDateBankRepository).findByEndDateAfter(any(LocalDate.class));
+        verify(organizationRepository).findAll();
         verify(dueDateBankRepository, times(1)).save(any(DueDateBank.class));
     }
 
     @Test
-    public void testCreateNextDueDateBanks_WithCurrentBanks() {
-        dueDateBank.setEndDate(LocalDate.now().plusDays(4));
+    public void testCreateNextDueDateBanks_CurrentDueDateBanksExistAndWithinFiveDays() {
+        dueDateBank.setEndDate(LocalDate.now().plusDays(3));
+
         when(dueDateBankRepository.findByEndDateAfter(any(LocalDate.class)))
                 .thenReturn(Collections.singletonList(dueDateBank));
+
         when(dueDateBankRepository.existsByStartDateAndOrganization(any(LocalDate.class), eq(organization)))
                 .thenReturn(false);
 
         dueDateBankService.createNextDueDateBanks();
 
-        verify(dueDateBankRepository, times(1)).save(any(DueDateBank.class));
+        verify(dueDateBankRepository).findByEndDateAfter(any(LocalDate.class));
+        verify(dueDateBankRepository).existsByStartDateAndOrganization(any(LocalDate.class), eq(organization));
+        verify(dueDateBankRepository).save(any(DueDateBank.class));
     }
 
     @Test
-    public void testCreateNextDueDateBanks_ExistingNextPeriod() {
-        dueDateBank.setEndDate(LocalDate.now().plusDays(4));
+    public void testCreateNextDueDateBanks_CurrentDueDateBanksExistButNotWithinFiveDays() {
+        dueDateBank.setEndDate(LocalDate.now().plusDays(10));
+
         when(dueDateBankRepository.findByEndDateAfter(any(LocalDate.class)))
                 .thenReturn(Collections.singletonList(dueDateBank));
+
+        dueDateBankService.createNextDueDateBanks();
+
+        verify(dueDateBankRepository).findByEndDateAfter(any(LocalDate.class));
+        verify(dueDateBankRepository, never()).existsByStartDateAndOrganization(any(LocalDate.class), any(Organization.class));
+        verify(dueDateBankRepository, never()).save(any(DueDateBank.class));
+    }
+
+    @Test
+    public void testCreateNextDueDateBanks_CurrentDueDateBanksExistWithinFiveDaysButNextPeriodExists() {
+        dueDateBank.setEndDate(LocalDate.now().plusDays(3));
+
+        when(dueDateBankRepository.findByEndDateAfter(any(LocalDate.class)))
+                .thenReturn(Collections.singletonList(dueDateBank));
+
         when(dueDateBankRepository.existsByStartDateAndOrganization(any(LocalDate.class), eq(organization)))
                 .thenReturn(true);
 
         dueDateBankService.createNextDueDateBanks();
 
-        verify(dueDateBankRepository, times(0)).save(any(DueDateBank.class));
+        verify(dueDateBankRepository).findByEndDateAfter(any(LocalDate.class));
+        verify(dueDateBankRepository).existsByStartDateAndOrganization(any(LocalDate.class), eq(organization));
+        verify(dueDateBankRepository, never()).save(any(DueDateBank.class));
     }
 }
