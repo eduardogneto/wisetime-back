@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.wisetime.wisetime.DTO.team.TeamDTO;
@@ -69,6 +70,17 @@ public class UserService {
 		}
 		return count;
 	}
+	
+	public ResponseEntity<String> deleteUsersByIds(List<Long> userIds) {
+	    List<Long> notFoundIds = userIds.stream()
+	        .filter(userId -> !userRepository.existsById(userId))
+	        .collect(Collectors.toList());
 
-    
+	    if (!notFoundIds.isEmpty()) {
+	        return ResponseEntity.badRequest().body("Usuários não encontrados para os IDs: " + notFoundIds);
+	    }
+
+	    userIds.forEach(userRepository::deleteById);
+	    return ResponseEntity.ok("Usuários com IDs " + userIds + " foram deletados com sucesso.");
+	}
 }
