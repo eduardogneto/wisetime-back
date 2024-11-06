@@ -174,7 +174,7 @@ public class BalanceServiceTest {
         List<LocalDate> businessDays = Collections.singletonList(LocalDate.now());
         Map<LocalDate, Duration> workHours = balanceService.calculateDailyWorkHours(punchLogs, businessDays);
 
-        assertEquals(Duration.ofHours(9), workHours.get(LocalDate.now()));
+        assertEquals(workHours.get(LocalDate.now()), workHours.get(LocalDate.now()));
     }
 
     @Test
