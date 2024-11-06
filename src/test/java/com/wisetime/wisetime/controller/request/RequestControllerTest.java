@@ -1,11 +1,9 @@
 package com.wisetime.wisetime.controller.request;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -27,7 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wisetime.wisetime.DTO.punch.ApprovalRequestDTO;
 import com.wisetime.wisetime.DTO.request.RequestDTO;
 import com.wisetime.wisetime.DTO.request.RequestFilterDTO;
 import com.wisetime.wisetime.DTO.request.RequestResponseDTO;
