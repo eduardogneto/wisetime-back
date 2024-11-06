@@ -298,4 +298,76 @@ public class RequestServiceTest {
         assertEquals(request.getStatus().name(), dto.getStatus());
         assertEquals(request.getRequestType().name(), dto.getRequestType());
     }
+    
+    @Test
+    public void testMapToDTO_AdditionOfPunch() {
+        request.setRequestType(RequestTypeEnum.ADICAO_DE_PONTO);
+        TemporaryPunch tempPunch = new TemporaryPunch();
+        tempPunch.setTimestamp(LocalDateTime.now());
+        tempPunch.setType(PunchTypeEnum.ENTRY);
+        tempPunch.setUser(user);
+        tempPunch.setRequest(request);
+        request.setTemporaryPunches(Arrays.asList(tempPunch));
+
+        RequestResponseDTO dto = requestService.mapToDTO(request);
+        
+        assertNotNull(dto);
+        assertEquals(request.getId(), dto.getId());
+        assertEquals(request.getRequestType().name(), dto.getRequestType());
+        assertEquals(1, dto.getPunches().size());
+        assertEquals(PunchTypeEnum.ENTRY.name(), dto.getPunches().get(0).getStatus());
+    }
+
+    @Test
+    public void testMapToDTO_Certificate() {
+        request.setRequestType(RequestTypeEnum.ATESTADO);
+        request.setCertificate(certificate);
+
+        RequestResponseDTO dto = requestService.mapToDTO(request);
+        
+        assertNotNull(dto);
+        assertEquals(request.getId(), dto.getId());
+        assertEquals(request.getRequestType().name(), dto.getRequestType());
+        assertNotNull(dto.getCertificate());
+        assertEquals(certificate.getJustification(), dto.getCertificate().getJustification());
+    }
+
+    @Test
+    public void testCreate_InvalidRequestType() {
+        requestDTO.setRequestType("INVALID_TYPE");
+
+        Exception exception = assertThrows(RuntimeException.class, () -> requestService.create(requestDTO));
+        assertEquals("Tipo de solicitação não suportado", "Tipo de solicitação não suportado");
+    }
+
+    @Test
+    public void testGetFilteredRequests_EmptyResult() {
+        RequestFilterDTO filterDTO = new RequestFilterDTO();
+        filterDTO.setTeamId(team.getId());
+        filterDTO.setTypes(Arrays.asList("ADICAO_DE_PONTO"));
+        filterDTO.setStatuses(Arrays.asList("APROVADO"));
+
+        when(requestRepository.findByUserTeamIdAndRequestTypeInAndStatusIn(eq(team.getId()), anyList(), anyList()))
+            .thenReturn(new ArrayList<>());
+
+        List<RequestDTO> result = requestService.getFilteredRequests(filterDTO);
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+        verify(requestRepository).findByUserTeamIdAndRequestTypeInAndStatusIn(eq(team.getId()), anyList(), anyList());
+    }
+
+    @Test
+    public void testGetFilteredRequests_WithNullTypesAndStatuses() {
+        RequestFilterDTO filterDTO = new RequestFilterDTO();
+        filterDTO.setTeamId(team.getId());
+
+        when(requestRepository.findByUserTeamId(eq(team.getId()))).thenReturn(Arrays.asList(request));
+
+        List<RequestDTO> result = requestService.getFilteredRequests(filterDTO);
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(requestRepository).findByUserTeamId(eq(team.getId()));
+    }
+
+    
 }
