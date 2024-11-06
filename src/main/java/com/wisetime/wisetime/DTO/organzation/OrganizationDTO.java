@@ -4,9 +4,13 @@ import java.util.List;
 
 import com.wisetime.wisetime.DTO.team.TeamDTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrganizationDTO {
 	
 	private Long id;

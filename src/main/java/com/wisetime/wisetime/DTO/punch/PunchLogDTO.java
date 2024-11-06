@@ -17,6 +17,4 @@ public class PunchLogDTO {
     private LocalDateTime timestamp;
     private PunchTypeEnum type;
     private String location;
-
-    
 }

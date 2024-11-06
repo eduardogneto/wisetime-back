@@ -4,6 +4,13 @@ import java.time.LocalDateTime;
 
 import com.wisetime.wisetime.models.punch.PunchTypeEnum;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PunchEditDTO {
     private Long userId;
     private Long punchLogId;
@@ -11,43 +18,4 @@ public class PunchEditDTO {
     private PunchTypeEnum type; 
     private String location;
 
-    public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getPunchLogId() {
-        return punchLogId;
-    }
-
-    public void setPunchLogId(Long punchLogId) {
-        this.punchLogId = punchLogId;
-    }
-
-    public LocalDateTime getNewTimestamp() {
-        return newTimestamp;
-    }
-
-    public void setNewTimestamp(LocalDateTime newTimestamp) {
-        this.newTimestamp = newTimestamp;
-    }
-
-    public PunchTypeEnum getType() {
-        return type;
-    }
-
-    public void setType(PunchTypeEnum type) {
-        this.type = type;
-    }
 }

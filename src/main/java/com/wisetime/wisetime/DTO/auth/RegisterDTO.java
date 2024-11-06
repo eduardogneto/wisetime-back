@@ -16,6 +16,4 @@ public class RegisterDTO {
     private TagUserEnum tag;
     private String name;  
     private Long teamId; 
-
-   
 }

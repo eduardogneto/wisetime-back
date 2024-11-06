@@ -11,5 +11,4 @@ public class UserBalanceDTO {
 
     private String userName;
     private Long totalBalanceInSeconds;
-
 }

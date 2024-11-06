@@ -4,9 +4,13 @@ import java.time.LocalDateTime;
 
 import com.wisetime.wisetime.models.request.RequestStatusEnum;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ApprovalRequestDTO {
 	private Long userId;
 	private RequestStatusEnum status; 

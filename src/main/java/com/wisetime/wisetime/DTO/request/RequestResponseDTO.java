@@ -6,9 +6,13 @@ import com.wisetime.wisetime.DTO.certificate.CertificateDTO;
 import com.wisetime.wisetime.DTO.punch.TemporaryPunchDTO;
 import com.wisetime.wisetime.DTO.user.UserDTO;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RequestResponseDTO {
     private Long id;
     private String requestType;
