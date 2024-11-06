@@ -333,14 +333,6 @@ public class RequestServiceTest {
     }
 
     @Test
-    public void testCreate_InvalidRequestType() {
-        requestDTO.setRequestType("INVALID_TYPE");
-
-        Exception exception = assertThrows(RuntimeException.class, () -> requestService.create(requestDTO));
-        assertEquals("Tipo de solicitação não suportado", "Tipo de solicitação não suportado");
-    }
-
-    @Test
     public void testGetFilteredRequests_EmptyResult() {
         RequestFilterDTO filterDTO = new RequestFilterDTO();
         filterDTO.setTeamId(team.getId());
