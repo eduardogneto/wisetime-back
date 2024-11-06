@@ -251,7 +251,7 @@ public class BalanceService {
         return true;
     }
 
-    private Set<LocalDate> getStaticHolidays(int startYear, int endYear) {
+    public Set<LocalDate> getStaticHolidays(int startYear, int endYear) {
         Set<LocalDate> holidays = new HashSet<>();
         
         for (int year = startYear; year <= endYear; year++) {
@@ -268,7 +268,7 @@ public class BalanceService {
         return holidays;
     }
     
-    private Set<LocalDate> getApprovedCertificateDates(Long userId) {
+    public Set<LocalDate> getApprovedCertificateDates(Long userId) {
         List<Certificate> approvedCertificates = certificateRepository.findByUserIdAndStatus(
             userId, CertificateStatusEnum.APROVADO);
 
