@@ -17,6 +17,7 @@ import com.wisetime.wisetime.DTO.balance.BalanceDTO;
 import com.wisetime.wisetime.DTO.team.TeamDTO;
 import com.wisetime.wisetime.DTO.user.UserResponseDTO;
 import com.wisetime.wisetime.models.user.User;
+import com.wisetime.wisetime.service.audit.AuditService;
 import com.wisetime.wisetime.service.balance.BalanceService;
 import com.wisetime.wisetime.service.team.TeamService;
 import com.wisetime.wisetime.service.user.UserService;
@@ -30,6 +31,8 @@ public class UserController {
 
     @Autowired
     private TeamService teamService;
+    @Autowired
+    private AuditService auditService;
     
     @Autowired
     private BalanceService balanceService;
@@ -44,6 +47,7 @@ public class UserController {
         User user = userService.findEntityById(userId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado para o ID: " + userId));
         balanceService.calculateAndSaveUserBalance(user);
+        auditService.logAction("Calculo de Horas", user, "O Usuário ativou o calculo de horas!");
         return "Cálculo dos saldos realizado com sucesso para o usuário ID: " + userId;
     }
 
