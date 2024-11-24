@@ -29,7 +29,7 @@ public class SecurityConfiguration {
 	    return httpSecurity
 	            .cors(cors -> cors.configurationSource(request -> {
 	                CorsConfiguration config = new CorsConfiguration();
-	                config.setAllowedOrigins(List.of("http://localhost:3000", "https://wisetime-front.vercel.app/", "https://wisetime.site/"));
+	                config.setAllowedOrigins(List.of("http://localhost:3000", "https://wisetime-front.vercel.app/", "https://wisetime.site/", "http://wisetime.site/"));
 	                config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); 
 	                config.setAllowedHeaders(List.of("*")); 
 	                config.setAllowCredentials(true); 
