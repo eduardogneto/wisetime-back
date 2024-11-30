@@ -11,7 +11,7 @@
 Clone o repositório para o seu ambiente local com o seguinte comando:
 
 ```
-https://github.com/eduardogneto/wisetime-back.git
+git clone https://github.com/eduardogneto/wisetime-back.git
 ```
 
 Navegue até a pasta do projeto:
