@@ -27,7 +27,7 @@ public interface UserBalanceRepository extends JpaRepository<UserBalance, Long> 
 	
 	@Query("SELECT new com.wisetime.wisetime.DTO.balance.UserBalanceDTO(u.name, ub.totalBalanceInSeconds) " +
 		       "FROM UserBalance ub JOIN ub.user u " +
-		       "WHERE u.team.id = :teamId")
+		       "WHERE u.team.id = :teamId AND u.tag != ADMINISTRADOR")
 	List<UserBalanceDTO> findUserBalancesByTeamId(@Param("teamId") Long teamId);
 
 
