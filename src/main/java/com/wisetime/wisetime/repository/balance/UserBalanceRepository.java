@@ -14,15 +14,15 @@ public interface UserBalanceRepository extends JpaRepository<UserBalance, Long> 
 	@Query("SELECT ub FROM UserBalance ub WHERE ub.user.id = :userId")
 	UserBalance findByUserId(@Param("userId") Long userId);
 
-	@Query(value = "SELECT COUNT(*) FROM user_balances ub JOIN users u ON ub.user_id = u.id WHERE u.team_id = :teamId AND ub.total_balance_in_seconds > 0", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) FROM user_balances ub JOIN users u ON ub.user_id = u.id WHERE u.team_id = :teamId AND ub.total_balance_in_seconds > 0 AND u.tag != 'ADMINISTRADOR'", nativeQuery = true)
 	long countUsersWithPositiveBalanceByTeamId(@Param("teamId") Long teamId);
 	
-	@Query(value = "SELECT COUNT(*) FROM user_balances ub JOIN users u ON ub.user_id = u.id WHERE u.team_id = :teamId AND ub.total_balance_in_seconds < 0", nativeQuery = true)
+	@Query(value = "SELECT COUNT(*) FROM user_balances ub JOIN users u ON ub.user_id = u.id WHERE u.team_id = :teamId AND ub.total_balance_in_seconds < 0 AND u.tag != 'ADMINISTRADOR'", nativeQuery = true)
 	long countUsersWithNegativeBalanceByTeamId(@Param("teamId") Long teamId);
 	
 	@Query(value = "SELECT SUM(ub.total_balance_in_seconds) FROM user_balances ub " +
             "JOIN users u ON ub.user_id = u.id " +
-            "WHERE u.team_id = :teamId", nativeQuery = true)
+            "WHERE u.team_id = :teamId AND u.tag != 'ADMINISTRADOR'", nativeQuery = true)
 	Long sumTotalBalanceByTeamId(@Param("teamId") Long teamId);
 	
 	@Query("SELECT new com.wisetime.wisetime.DTO.balance.UserBalanceDTO(u.name, ub.totalBalanceInSeconds) " +
